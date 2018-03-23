@@ -9,7 +9,7 @@ class Exam(models.Model):
     to a user.
     """
     name_max_length = 200  # TODO: what is the maximum length
-    fach = models.CharField(max_length=name_max_length)
+    lecture = models.CharField(max_length=name_max_length)
     study = models.ForeignKey(Study, on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateField(auto_now_add=True)

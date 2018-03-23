@@ -1,4 +1,8 @@
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
+from mixer.backend.django import mixer
+from rest_framework.test import APIClient
+
+from exams.models import Exam
 
 
 class CreateExamApiTest(TestCase):
@@ -6,9 +10,15 @@ class CreateExamApiTest(TestCase):
     pass
 
 
-class RetrieveExamListApiTest(TestCase):
-    # TODO API: App can retrieve a list of all available courses
-    pass
+class RetrieveExamListApiTest(TransactionTestCase):
+    def setup(self):
+        self.client = APIClient()
+
+    def test_serial(self):
+        mixer.blend(Exam, name="stuff")
+        response = self.client.get("http://localhost:8000/api/exams/")
+        self.assertEquals(len(response.data), 1)
+        self.assertEquals(response.data[0]['name'], "stuff")
 
 class RetrieveExamApiTest(TestCase):
     # TODO API: Retrieval of a single exam, including a list of all questions and answers

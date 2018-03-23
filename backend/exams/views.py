@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from rest_framework import viewsets
 
-# Create your views here.
+from exams.models import Exam
+from exams.serializers import ExamListSerializer
+
+
+class ExamListViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Exam.objects.all()
+    serializer_class = ExamListSerializer
+
