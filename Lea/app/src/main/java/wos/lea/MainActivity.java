@@ -3,6 +3,7 @@ package wos.lea;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,8 +14,32 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import wos.lea.networking.Exam;
+import wos.lea.networking.LeaRestService;
+import wos.lea.networking.NetworkManager;
+
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
+    public ArrayList<Exam> getExams() {
+        return exams;
+    }
+
+    public void setExams(ArrayList<Exam> exams) {
+        this.exams = exams;
+    }
+
+    private ArrayList<Exam> exams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +65,27 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        Call<List<Exam>> call = NetworkManager.getInstance().leaRestService.listAllExams();
+
+        call.enqueue(new Callback<List<Exam>>() {
+            @Override
+            public void onResponse(Call<List<Exam>> call, Response<List<Exam>> response) {
+                exams = new ArrayList<>(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<List<Exam>> call, Throwable t) {
+                Log.d("EXAMS", "FAIL");
+            }
+        });
+
+
+
+
+
+
     }
 
     @Override
