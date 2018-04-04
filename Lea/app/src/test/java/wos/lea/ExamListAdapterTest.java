@@ -24,7 +24,7 @@ public class ExamListAdapterTest {
 
     @Test
     public void adapterEmptyListTest() {
-        ExamListAdapter adapter = new ExamListAdapter(Mockito.mock(Context.class), new ArrayList<Exam>);
+        ExamListAdapter adapter = new ExamListAdapter(Mockito.mock(Context.class), new ArrayList<Exam>());
         Assert.assertNotNull(adapter);
     }
 

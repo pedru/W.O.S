@@ -11,7 +11,15 @@ public class Exam {
     private String lectureName;
     private String study;
     private Date created;
+    private Date examDate;
 
+    public Date getExamDate() {
+        return examDate;
+    }
+
+    public void setExamDate(Date examDate) {
+        this.examDate = examDate;
+    }
 
     public String getLectureName() {
         return lectureName;
