@@ -2,11 +2,14 @@ package wos.lea;
 
 import android.app.Instrumentation;
 import android.content.Context;
+import android.content.Intent;
+import android.support.test.espresso.intent.Intents;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.InstrumentationTestCase;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -14,6 +17,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.intent.Intents.intended;
 import static org.junit.Assert.*;
 
 /**
@@ -54,4 +63,11 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         assertNotNull(adapter);
     }
 
+    @Test
+    public void searchButton() {
+        ImageButton button = mainActivity.findViewById(R.id.searchButton);
+        button.performClick();
+
+        intended(hasComponent(SearchExamActivity.class.getName()));
+    }
 }
