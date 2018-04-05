@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private ArrayList<Exam> exams;
+
+    private ListView examList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<List<Exam>> call, Response<List<Exam>> response) {
                 exams = new ArrayList<>(response.body());
+                ExamListAdapter adapter = new ExamListAdapter(MainActivity.this, exams);
+                examList.setAdapter(adapter);
             }
 
             @Override
@@ -81,9 +86,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
-
-
+        examList = findViewById(R.id.examList);
 
 
     }
