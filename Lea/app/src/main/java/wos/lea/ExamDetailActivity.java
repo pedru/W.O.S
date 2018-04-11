@@ -5,9 +5,24 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import wos.lea.networking.Exam;
+import wos.lea.networking.ExamDetail;
+import wos.lea.networking.NetworkManager;
+import wos.lea.networking.Question;
 
 public class ExamDetailActivity extends AppCompatActivity {
+    private ExamDetail examDetail;
+    private ListView questionListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,12 +31,22 @@ public class ExamDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        int id = getIntent().getIntExtra("examId", 0);
+        questionListView = findViewById(R.id.questionList);
+        Call<ExamDetail> call = NetworkManager.getInstance().leaRestService.getExamById(id);
+
+        call.enqueue(new Callback<ExamDetail>() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onResponse(Call<ExamDetail> call, Response<ExamDetail> response) {
+                examDetail = response.body();
+                setTitle(examDetail.getLecture());
+                QuestionListAdapter adapter = new QuestionListAdapter(ExamDetailActivity.this, examDetail.getQuestions());
+                questionListView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<ExamDetail> call, Throwable t) {
+                Log.d("EXAMS", "FAIL");
             }
         });
     }
