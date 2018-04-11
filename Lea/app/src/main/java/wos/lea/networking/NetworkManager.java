@@ -17,7 +17,7 @@ public class NetworkManager {
     public LeaRestService leaRestService;
 
 
-    private String API_BASE_URL = "https://www.tankpirat.de";
+    private String API_BASE_URL = "http://netzweber.at:8080";
 
     private NetworkManager() {
 
