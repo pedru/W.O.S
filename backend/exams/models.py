@@ -25,9 +25,11 @@ class ExamDate(models.Model):
     date = models.DateField()
     time_start = models.TimeField()
     time_end = models.TimeField()
-    exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
-    subscribed = models.ManyToManyField(User, related_name="exams")
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name="exam_dates")
+    subscribed = models.ManyToManyField(User, related_name="exams", blank=True)
 
+    def __str__(self):
+        return "{} - {} ({})".format(self.exam.lecture, self.exam.study.name, self.date)
 
 class AdditionalInformation(models.Model):
     """
@@ -51,7 +53,7 @@ class Question(models.Model):
     """
     A single question of an exam
     """
-    exam_date = models.ForeignKey(ExamDate, on_delete=models.CASCADE)
+    exam_date = models.ForeignKey(ExamDate, on_delete=models.CASCADE, related_name='questions')
     question = models.TextField()  # TODO: Formatierungsmöglichkeiten?
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
