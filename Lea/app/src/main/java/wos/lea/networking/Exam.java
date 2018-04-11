@@ -8,10 +8,19 @@ import java.util.Date;
 
 public class Exam {
 
+    private int id;
     private String lectureName;
     private String study;
     private Date created;
     private Date examDate;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public Date getExamDate() {
         return examDate;

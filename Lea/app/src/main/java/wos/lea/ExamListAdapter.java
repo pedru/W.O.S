@@ -1,6 +1,7 @@
 package wos.lea;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +18,12 @@ import wos.lea.networking.Exam;
  * Created by martin on 04.04.18.
  */
 
-public class ExamListAdapter extends ArrayAdapter<Exam> {
+public class ExamListAdapter extends ArrayAdapter<Exam> implements View.OnClickListener {
+    private Context context;
+
     public ExamListAdapter(Context context, List<Exam> exams) {
         super(context, 0, exams);
+        this.context = context;
     }
 
     @Override
@@ -38,7 +42,18 @@ public class ExamListAdapter extends ArrayAdapter<Exam> {
         examNameView.setText(exam.getLectureName());
         examDateView.setText(simpleDateFormat.format(examDate));
 
+        convertView.setOnClickListener(this);
+        convertView.setTag(exam);
+
         return convertView;
     }
 
+    @Override
+    public void onClick(View view) {
+        Exam exam = (Exam) view.getTag();
+
+        Intent intent = new Intent(context, ExamDetailActivity.class);
+        intent.putExtra("examId", exam.getId());
+        context.startActivity(intent);
+    }
 }
