@@ -7,5 +7,5 @@ class ExamListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Exam
-        fields = ('id', 'lecture')
+        fields = ('id', 'lecture', 'study', 'owner', 'created')
 

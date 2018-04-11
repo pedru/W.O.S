@@ -15,6 +15,10 @@ class Exam(models.Model):
     created = models.DateField(auto_now_add=True)
 
 
+    def __str__(self):
+        return self.study.name
+
+
 class ExamDate(models.Model):
     """
     Date and time when a single exam is due
