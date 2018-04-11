@@ -17,6 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
@@ -39,7 +40,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     @Before
     public void setUp() throws Exception {
-
         super.setUp();
         injectInsrumentation(InstrumentationRegistry.getInstrumentation());
         mainActivity = getActivity();
@@ -65,9 +65,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     @Test
     public void searchButton() {
-        ImageButton button = mainActivity.findViewById(R.id.searchButton);
-        button.performClick();
-
+        Intents.init();
+        onView(withId(R.id.searchButton)).check(matches(isClickable()));
+        onView(withId(R.id.searchButton)).perform(click());
         intended(hasComponent(SearchExamActivity.class.getName()));
     }
 }
