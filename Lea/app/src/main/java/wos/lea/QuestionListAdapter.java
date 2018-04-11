@@ -42,11 +42,6 @@ public class QuestionListAdapter extends ArrayAdapter<Question> implements View.
 
     @Override
     public void onClick(View view) {
-        Exam exam = (Exam) view.getTag();
-
-        Intent intent = new Intent(context, ExamDetailActivity.class);
-        intent.putExtra("examId", exam.getId());
-        context.startActivity(intent);
     }
 }
 

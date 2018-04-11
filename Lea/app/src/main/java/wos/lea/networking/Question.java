@@ -7,7 +7,9 @@ import java.util.List;
  */
 
 public class Question {
+    private int id;
     private String question;
+    private int user;
     private List<Answer> answers;
 
     public String getQuestion() {

@@ -38,8 +38,8 @@ public class ExamListAdapter extends ArrayAdapter<Exam> implements View.OnClickL
         TextView examDateView = (TextView) convertView.findViewById(R.id.date);
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-        Date examDate = exam.getExamDate();
-        examNameView.setText(exam.getLectureName());
+        Date examDate = exam.getDate();
+        examNameView.setText(exam.getLecture().getName());
         examDateView.setText(simpleDateFormat.format(examDate));
 
         convertView.setOnClickListener(this);

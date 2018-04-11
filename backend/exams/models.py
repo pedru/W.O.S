@@ -3,40 +3,38 @@ from django.db import models
 from studies.models import Study
 
 
+class Lecture(models.Model):
+    name = models.CharField(max_length=150)
+
+
+    def __str__(self):
+        return self.name
+
+
 class Exam(models.Model):
     """
     Stores an exam that occurs on a specific date and belongs
     to a user.
     """
     name_max_length = 200  # TODO: what is the maximum length
-    lecture = models.CharField(max_length=name_max_length)
+    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)
+    date = models.DateField()
     study = models.ForeignKey(Study, on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    subscribed = models.ManyToManyField(User, related_name="exams", blank=True)
     created = models.DateField(auto_now_add=True)
 
-
     def __str__(self):
-        return self.study.name
-
-
-class ExamDate(models.Model):
-    """
-    Date and time when a single exam is due
-    """
-    date = models.DateField()
-    time_start = models.TimeField()
-    time_end = models.TimeField()
-    exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
-    subscribed = models.ManyToManyField(User, related_name="exams")
+        return "{} ({})".format(self.study.name, self.lecture)
 
 
 class AdditionalInformation(models.Model):
     """
-    Stores additional information for a specific exam date
+    Stores additional information for a specific exam
     """
     description = models.TextField()
     link = models.URLField(verbose_name="Additional Link with external information")
-    examdate = models.ForeignKey(ExamDate, on_delete=models.CASCADE)
+    examdate = models.ForeignKey(Exam, on_delete=models.CASCADE)
 
 
 class AdditionalInformationRating(models.Model):
@@ -52,9 +50,13 @@ class Question(models.Model):
     """
     A single question of an exam
     """
-    exam = models.ForeignKey(ExamDate, on_delete=models.CASCADE)
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='questions')
     question = models.TextField()  # TODO: Formatierungsmöglichkeiten?
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        return self.question
 
 
 class Answer(models.Model):
@@ -63,6 +65,9 @@ class Answer(models.Model):
     """
     text = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def str(self):
+        return self.text
 
 
 class Rating(models.Model):
