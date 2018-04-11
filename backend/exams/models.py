@@ -4,8 +4,10 @@ from studies.models import Study
 
 
 class Lecture(models.Model):
+    """
+    Represents a lecture
+    """
     name = models.CharField(max_length=150)
-
 
     def __str__(self):
         return self.name
@@ -25,7 +27,7 @@ class Exam(models.Model):
     created = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return "{} ({})".format(self.study.name, self.lecture)
+        return "{} ({}) - {}".format(self.lecture, self.study.name, self.date)
 
 
 class AdditionalInformation(models.Model):
@@ -34,7 +36,7 @@ class AdditionalInformation(models.Model):
     """
     description = models.TextField()
     link = models.URLField(verbose_name="Additional Link with external information")
-    examdate = models.ForeignKey(Exam, on_delete=models.CASCADE)
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
 
 
 class AdditionalInformationRating(models.Model):
@@ -54,7 +56,6 @@ class Question(models.Model):
     question = models.TextField()  # TODO: Formatierungsmöglichkeiten?
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-
     def __str__(self):
         return self.question
 
@@ -66,7 +67,7 @@ class Answer(models.Model):
     text = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    def str(self):
+    def __str__(self):
         return self.text
 
 
