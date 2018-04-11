@@ -11,7 +11,7 @@ import retrofit2.http.GET;
 
 public interface LeaRestService {
 
-    @GET("exams/all")
+    @GET("api/exams/")
     Call<List<Exam>> listAllExams();
 
 }
