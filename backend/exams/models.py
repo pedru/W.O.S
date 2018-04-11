@@ -7,7 +7,7 @@ class Lecture(models.Model):
     name = models.CharField(max_length=150)
 
 
-    def __str(self):
+    def __str__(self):
         return self.name
 
 
@@ -55,12 +55,19 @@ class Question(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
+    def __str__(self):
+        return self.question
+
+
 class Answer(models.Model):
     """
     Possible answer to a question
     """
     text = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def str(self):
+        return self.text
 
 
 class Rating(models.Model):
