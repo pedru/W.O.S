@@ -21,10 +21,7 @@ SECRET_KEY = 'ftpcm_eq_e^n4!6sg-fqvff=5$fyp@via$d^-94b#_h5pu6(j2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['netzweber.at']
-
-
-# Application definition
+ALLOWED_HOSTS = ['netzweber.at', '127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',

@@ -1,9 +1,16 @@
-from django.test import TestCase, TransactionTestCase
+from django.test import TestCase, TransactionTestCase, SimpleTestCase
 from mixer.backend.django import mixer
 from rest_framework.test import APIClient
 
-from exams.models import Exam
+from exams.models import Exam, Lecture
 
+
+class LectureTestCase(SimpleTestCase):
+
+    def test_str(self):
+        lecture_name = "Foobar"
+        l = mixer.blend(Lecture, name=lecture_name)
+        self.assertEquals(str(l), lecture_name)
 
 class CreateExamApiTest(TestCase):
     # TODO API: User should be able to create a new exam

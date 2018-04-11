@@ -7,6 +7,10 @@ class Lecture(models.Model):
     name = models.CharField(max_length=150)
 
 
+    def __str(self):
+        return self.name
+
+
 class Exam(models.Model):
     """
     Stores an exam that occurs on a specific date and belongs
