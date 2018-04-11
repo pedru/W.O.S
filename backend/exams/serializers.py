@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from exams.models import Exam, Question, ExamDate
+from exams.models import Exam, Question, Lecture
 from studies.serializers import StudyListSerializer
 
 class QuestionListSerializer(serializers.ModelSerializer):
@@ -10,25 +10,15 @@ class QuestionListSerializer(serializers.ModelSerializer):
         fields = ('id', 'question', 'user')
 
 
-class ExamDateListSerializer(serializers.ModelSerializer):
-
-    # TODO: add subscribers
-    # subscribers =
-
-    questions = QuestionListSerializer(many=True)
-
+class LectureSerialize(serializers.ModelSerializer):
     class Meta:
-        model = ExamDate
-        fields = ('id','date','time_start', 'time_end', 'questions')
-
+        model = Lecture
 
 class ExamListSerializer(serializers.ModelSerializer):
     study = StudyListSerializer()
-    exam_dates = ExamDateListSerializer(many=True)
-
     class Meta:
         model = Exam
-        fields = ('id', 'lecture', 'study', 'owner', 'created', 'exam_dates')
+        fields = ('id', 'lecture', 'study', 'date', 'owner', 'created')
 
 
 
