@@ -8,32 +8,32 @@ import java.util.Date;
 
 public class Exam {
 
-    private String lectureName;
-    private String study;
+    private Lecture lecture;
+    private Study study;
     private Date created;
-    private Date examDate;
+    private Date date;
 
-    public Date getExamDate() {
-        return examDate;
+    public Date getDate() {
+        return date;
     }
 
-    public void setExamDate(Date examDate) {
-        this.examDate = examDate;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public String getLectureName() {
-        return lectureName;
+    public Lecture getLecture() {
+        return lecture;
     }
 
-    public void setLectureName(String lectureName) {
-        this.lectureName = lectureName;
+    public void setLecture(Lecture lecture) {
+        this.lecture = lecture;
     }
 
-    public String getStudy() {
+    public Study getStudy() {
         return study;
     }
 
-    public void setStudy(String study) {
+    public void setStudy(Study study) {
         this.study = study;
     }
 
