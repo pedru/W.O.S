@@ -4,18 +4,79 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchExamActivity">
+    tools:context=".SearchExamActivity"
+    tools:layout_editor_absoluteY="81dp">
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="186dp"
-        android:layout_height="59dp"
-        android:layout_marginStart="110dp"
-        android:layout_marginTop="109dp"
-        android:text="SearchActivity"
+        android:id="@+id/studyProgramSearch"
+        android:layout_width="109dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="433dp"
+        android:text="Course"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/studyProgramSpinner"
+        app:layout_constraintTop_toBottomOf="@+id/studyProgramSpinner" />
+
+    <TextView
+        android:id="@+id/courseSearch"
+        android:layout_width="106dp"
+        android:layout_height="31dp"
+        android:text="Study program"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/studyProgramSpinner"
+        app:layout_constraintEnd_toEndOf="@+id/studyProgramSearch"
+        app:layout_constraintStart_toStartOf="@+id/studyProgramSpinner"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/studyProgramSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/studyProgramSearch"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textSize="25sp"/>
+        app:layout_constraintTop_toBottomOf="@+id/courseSearch" />
+
+    <Spinner
+        android:id="@+id/courseSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/studyProgramSearch" />
+
+    <TextView
+        android:id="@+id/dateSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date"
+        android:textSize="16sp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="109dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/courseSpinner"/>
+
+    <DatePicker
+        android:id="@+id/calenderSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:datePickerMode="calendar"
+        android:elevation="24dp"
+        android:background="#ffffff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/dateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/date_search_button_style"
+        android:text="Button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateSearch" />
 
 
 </android.support.constraint.ConstraintLayout>
