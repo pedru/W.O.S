@@ -14,9 +14,8 @@ class Exam(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateField(auto_now_add=True)
 
-
     def __str__(self):
-        return self.study.name
+        return "{} ({})".format(self.study.name, self.lecture)
 
 
 class ExamDate(models.Model):
@@ -52,7 +51,7 @@ class Question(models.Model):
     """
     A single question of an exam
     """
-    exam = models.ForeignKey(ExamDate, on_delete=models.CASCADE)
+    exam_date = models.ForeignKey(ExamDate, on_delete=models.CASCADE)
     question = models.TextField()  # TODO: Formatierungsmöglichkeiten?
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
