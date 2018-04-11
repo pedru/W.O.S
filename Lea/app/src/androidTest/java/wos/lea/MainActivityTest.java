@@ -3,6 +3,7 @@ package wos.lea;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.intent.Intents;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.InstrumentationTestCase;
@@ -14,6 +15,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.*;
 
 /**
@@ -53,5 +61,14 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         ListAdapter adapter = listView.getAdapter();
         assertNotNull(adapter);
     }
+
+    @Test
+    public void clickOnExamTest() {
+        ListView listView = mainActivity.findViewById(R.id.examList);
+        assertNotNull(listView);
+        listView.getChildAt(0).performClick();
+        intended(hasComponent(ExamDetailActivity.class.getName()));
+    }
+
 
 }
