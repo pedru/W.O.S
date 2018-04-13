@@ -62,11 +62,9 @@ public class MainActivityTest {
 
     @Test
     public void searchButton() {
-        Intents.init();
         onView(withId(R.id.searchButton)).check(matches(isClickable()));
         onView(withId(R.id.searchButton)).perform(click());
         intended(hasComponent(SearchExamActivity.class.getName()));
-        Intents.release();
     }
 
     @Test
@@ -78,8 +76,6 @@ public class MainActivityTest {
         String text = (String) name.getText();
         onView(withText(text)).perform(click());
         intended(hasComponent(ExamDetailActivity.class.getName()));
-        Intents.release();
-
     }
 
 
