@@ -8,32 +8,41 @@ import java.util.Date;
 
 public class Exam {
 
-    private String lectureName;
-    private String study;
+    private int id;
+    private Lecture lecture;
+    private Study study;
     private Date created;
-    private Date examDate;
+    private Date date;
 
-    public Date getExamDate() {
-        return examDate;
+    public int getId() {
+        return id;
     }
 
-    public void setExamDate(Date examDate) {
-        this.examDate = examDate;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getLectureName() {
-        return lectureName;
+    public Date getDate() {
+        return date;
     }
 
-    public void setLectureName(String lectureName) {
-        this.lectureName = lectureName;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
-    public String getStudy() {
+    public Lecture getLecture() {
+        return lecture;
+    }
+
+    public void setLecture(Lecture lecture) {
+        this.lecture = lecture;
+    }
+
+    public Study getStudy() {
         return study;
     }
 
-    public void setStudy(String study) {
+    public void setStudy(Study study) {
         this.study = study;
     }
 
