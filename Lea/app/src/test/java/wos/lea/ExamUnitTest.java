@@ -31,7 +31,7 @@ public class ExamUnitTest {
 
     private MockWebServer server;
 
-    private String mockResponseString = "[{ \"lectureName\":\"something\", \"study\":\"study\" ,\"created\":\"Mar 27, 2018 3:47:41 PM\"} ]";
+    private String mockResponseString = "[ { \"id\": 1, \"lecture\": { \"id\": 2, \"name\": \"OCS\" }, \"study\": { \"id\": 2, \"name\": \"Computer Science\" }, \"date\": \"2018-04-03\", \"owner\": 2, \"created\": \"2018-04-11\", \"questions\": [ { \"id\": 1, \"question\": \"Describe the benefits of pair programming.\", \"user\": 1 } ] }, { \"id\": 2, \"lecture\": { \"id\": 4, \"name\": \"Mobile APPS\" }, \"study\": { \"id\": 1, \"name\": \"Elektrotechnik\" }, \"date\": \"2018-04-24\", \"owner\": 2, \"created\": \"2018-04-11\", \"questions\": [] }, { \"id\": 3, \"lecture\": { \"id\": 5, \"name\": \"Softwaretechnologie\" }, \"study\": { \"id\": 2, \"name\": \"Computer Science\" }, \"date\": \"2018-04-11\", \"owner\": 1, \"created\": \"2018-04-11\", \"questions\": [] } ]I";
 
     @Before
     public void setUp() throws Exception {
@@ -54,9 +54,9 @@ public class ExamUnitTest {
         LeaRestService restService = retrofit.create(LeaRestService.class);
 
         List<Exam> examList = restService.listAllExams().execute().body();
-        assertEquals(examList.size(), 1);
-        assertEquals("something", examList.get(0).getLectureName());
-        assertEquals("study", examList.get(0).getStudy());
+        assertEquals(examList.size(), 3);
+        assertEquals("OCS", examList.get(0).getLecture().getName());
+        assertEquals("Computer Science", examList.get(0).getStudy().getName());
         assertNotNull(examList.get(0).getCreated());
     }
 }

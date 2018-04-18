@@ -40,14 +40,6 @@ public class MainActivityTest {
             new IntentsTestRule<>(MainActivity.class);
 
     @Test
-    public void testClickOnExam() {
-        ListView v = testRule.getActivity().findViewById(R.id.examList);
-        String text = (String) ((TextView) v.getChildAt(0).findViewById(R.id.name)).getText();
-        onView(withText(text)).perform(click());
-        intended(hasComponent(hasShortClassName(".ExamDetailActivity")));
-    }
-
-    @Test
     public void getExamsTest() throws InterruptedException {
         assertNotNull(testRule.getActivity().getExams());
     }
@@ -75,6 +67,7 @@ public class MainActivityTest {
         onView(withText(text)).perform(click());
         intended(hasComponent(ExamDetailActivity.class.getName()));
     }
+
 
 
 }
