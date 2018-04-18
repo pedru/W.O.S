@@ -7,5 +7,5 @@ class StudyListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Study
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'exams')
 
