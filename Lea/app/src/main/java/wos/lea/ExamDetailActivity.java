@@ -40,7 +40,7 @@ public class ExamDetailActivity extends AppCompatActivity {
 
 
 
-        int id = getIntent().getIntExtra("examId", 0);
+        int id = getIntent().getIntExtra("examId", 1);
         questionListView = findViewById(R.id.questionList);
         Call<ExamDetail> call = NetworkManager.getInstance().leaRestService.getExamById(id);
 

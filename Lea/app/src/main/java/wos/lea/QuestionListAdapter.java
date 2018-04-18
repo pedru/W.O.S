@@ -19,7 +19,7 @@ import wos.lea.networking.Question;
  * Created by martin on 11.04.18.
  */
 
-public class QuestionListAdapter extends ArrayAdapter<Question> implements View.OnClickListener {
+public class QuestionListAdapter extends ArrayAdapter<Question>  {
     private Context context;
 
     public QuestionListAdapter(Context context, List<Question> questions) {
@@ -40,8 +40,5 @@ public class QuestionListAdapter extends ArrayAdapter<Question> implements View.
         return convertView;
     }
 
-    @Override
-    public void onClick(View view) {
-    }
 }
 
