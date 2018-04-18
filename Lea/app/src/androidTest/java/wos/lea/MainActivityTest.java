@@ -2,10 +2,12 @@ package wos.lea;
 
 import android.app.Instrumentation;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.InstrumentationTestCase;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -13,6 +15,9 @@ import android.widget.ListView;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import static org.junit.Assert.*;
 
@@ -53,5 +58,15 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         ListAdapter adapter = listView.getAdapter();
         assertNotNull(adapter);
     }
+
+    @Test
+    public void authTest()
+    {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String authtoken = sharedPref.getString("Token","");
+        assertTrue(authtoken.length()>4);
+    }
+
+
 
 }

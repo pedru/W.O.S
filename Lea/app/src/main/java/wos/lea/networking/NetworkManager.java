@@ -1,5 +1,14 @@
 package wos.lea.networking;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import java.io.IOException;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -10,27 +19,52 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NetworkManager {
     private static final NetworkManager ourInstance = new NetworkManager();
 
+
     public static NetworkManager getInstance() {
         return ourInstance;
     }
 
     public LeaRestService leaRestService;
 
+    private String authtoken;
+
 
     private String API_BASE_URL = "http://netzweber.at:8080";
 
     private NetworkManager() {
 
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+                                      @Override
+                                      public Response intercept(Interceptor.Chain chain) throws IOException {
+                                          Request original = chain.request();
 
+                                          Request request = original.newBuilder()
+                                                  .header("Authorization", "Token " + authtoken)
+                                                  .method(original.method(), original.body())
+                                                  .build();
+
+                                          return chain.proceed(request);
+                                      }
+                                  });
+
+
+        OkHttpClient client = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(API_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .build();
 
         leaRestService = retrofit.create(LeaRestService.class);
 
     }
 
+    public String getAuthtoken() {
+        return authtoken;
+    }
 
-
+    public void setAuthtoken(String authtoken) {
+        this.authtoken = authtoken;
+    }
 }

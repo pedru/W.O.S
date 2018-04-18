@@ -14,4 +14,7 @@ public interface LeaRestService {
     @GET("api/exams/")
     Call<List<Exam>> listAllExams();
 
+    @GET("api/user/token")
+    Call<String> getAuthToken();
+
 }

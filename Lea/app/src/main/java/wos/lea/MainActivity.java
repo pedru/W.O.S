@@ -1,5 +1,7 @@
 package wos.lea;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,6 +17,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +74,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        authenticate();
 
 
         Call<List<Exam>> call = NetworkManager.getInstance().leaRestService.listAllExams();
@@ -147,4 +155,51 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public void authenticate() {
+
+
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        String authtoken = sharedPref.getString("Token","");
+
+        if(authtoken.length() < 4)
+        {
+            // GET NEW TOKEN
+            /*
+            Call<String> call = NetworkManager.getInstance().leaRestService.getAuthToken();
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+
+                    String authtoken  = response.body();
+                    final String FILE_NAME = "auth";
+                    String fileContents = authtoken;
+
+
+
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Log.d("AUTH", "FAIL");
+                }
+            });
+
+            */
+            saveAuthFile("123456");
+        }
+
+        NetworkManager.getInstance().setAuthtoken(authtoken);
+    }
+
+    public void saveAuthFile(String token) {
+
+        SharedPreferences sharedPref = this.getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("Token", token);
+        editor.apply();
+
+    }
+
+
 }
