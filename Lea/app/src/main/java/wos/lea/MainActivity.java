@@ -171,16 +171,13 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
 
-                    String authtoken  = response.body();
-                    final String FILE_NAME = "auth";
-                    String fileContents = authtoken;
-
-
-
+                    Log.d("AUTH", "Successful");
+                   authtoken  = response.body();
                 }
 
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
+                    authtoken  = "";
                     Log.d("AUTH", "FAIL");
                 }
             });
