@@ -22,6 +22,8 @@ import org.junit.runner.RunWith;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import wos.lea.networking.NetworkManager;
+
 import static org.junit.Assert.*;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -69,6 +71,21 @@ public class MainActivityTest {
         SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         String authtoken = sharedPref.getString("Token","");
         assertTrue(authtoken.length()>4);
+    }
+
+
+    @Test
+    public void authTest1()
+    {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        sharedPref.edit().clear();
+        sharedPref.edit().apply();
+        mainActivity.authenticate();
+        assertTrue(NetworkManager.getInstance().getAuthtoken().length() > 4);
+        SharedPreferences sharedPref1 = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String authtoken = sharedPref1.getString("Token","");
+        assertTrue(authtoken.length()>4);
+
     }
 
     @Test

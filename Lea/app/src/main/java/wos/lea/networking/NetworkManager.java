@@ -26,7 +26,7 @@ public class NetworkManager {
 
     public LeaRestService leaRestService;
 
-    private String authtoken;
+    private String authtoken = "";
 
 
     private String API_BASE_URL = "http://netzweber.at:8080";
