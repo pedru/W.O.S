@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -40,7 +41,6 @@ public class ExamDetailActivity extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
 
 
-
         int id = getIntent().getIntExtra("examId", 1);
         questionListView = findViewById(R.id.questionList);
         Call<ExamDetail> call = NetworkManager.getInstance().leaRestService.getExamById(id);
@@ -65,4 +65,43 @@ public class ExamDetailActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.exam_detail_menu, menu);
+        return true;
+    }
+
+    boolean canRememberExam = true;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_remember:
+
+                canRememberExam =! canRememberExam;
+                invalidateOptionsMenu();
+
+
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.action_remember);
+        if(canRememberExam){
+            item.setIcon(R.drawable.ic_action_star_0);
+        }
+        else
+        {
+            item.setIcon(R.drawable.ic_action_star_10);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
 }
