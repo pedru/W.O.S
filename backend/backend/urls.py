@@ -19,11 +19,12 @@ from django.conf.urls import url, include
 from django.views.generic import RedirectView
 from rest_framework import routers
 
-from exams.views import ExamListViewSet
+from exams.views import ExamListViewSet, ExamSearch
+from studies.views import StudyListViewSet
 
 router = routers.DefaultRouter()
 router.register(r'exams', ExamListViewSet)
-
+router.register(r'studies', StudyListViewSet)
 
 admin.site.site_header = 'LeaBackend'
 
@@ -31,5 +32,6 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^api/', include(router.urls)),
     path('admin/', admin.site.urls),
+    url('^api/exams/search/(?P<needle>.+)/$', ExamSearch.as_view()),
     url('^$', RedirectView.as_view(url=reverse_lazy('admin:index')))
 ]

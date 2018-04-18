@@ -21,7 +21,7 @@ class Exam(models.Model):
     name_max_length = 200  # TODO: what is the maximum length
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)
     date = models.DateField()
-    study = models.ForeignKey(Study, on_delete=models.CASCADE)
+    study = models.ForeignKey(Study, on_delete=models.CASCADE, related_name="exams")
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     subscribed = models.ManyToManyField(User, related_name="exams", blank=True)
     created = models.DateField(auto_now_add=True)
