@@ -17,4 +17,10 @@ public interface LeaRestService {
 
     @GET("api/exams/{id}")
     Call<ExamDetail> getExamById(@Path("id") int id);
+
+    @GET("api/studies/")
+    Call<List<Study>> listAllStudies();
+
+    @GET("api/studies/{id}")
+    Call<StudyDetail> getCourseById(@Path("id") int id);
 }
