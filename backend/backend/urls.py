@@ -19,13 +19,13 @@ from django.conf.urls import url, include
 from django.views.generic import RedirectView
 from rest_framework import routers
 
-from exams.views import ExamSearch
 from exams.views import ExamViewSet, ExamSearch
+from studies.views import StudyListViewSet
 from users.views import create_user
 
 router = routers.DefaultRouter()
 router.register(r'exams', ExamViewSet)
-router.register(r'studies', StudyViewSet)
+router.register(r'studies', StudyListViewSet)
 router.register(r'exams', ExamViewSet)
 
 
@@ -36,6 +36,6 @@ urlpatterns = [
     url(r'^api/', include(router.urls)),
     path('admin/', admin.site.urls),
     url('^api/exams/search/(?P<needle>.+)/$', ExamSearch.as_view()),
-    url('^$', RedirectView.as_view(url=reverse_lazy('admin:index')))
+    url('^$', RedirectView.as_view(url=reverse_lazy('admin:index'))),
     url('^api/user/token', create_user)
 ]
