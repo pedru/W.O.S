@@ -4,7 +4,7 @@ from exams.models import Exam, Question
 from exams.serializers import ExamListSerializer, QuestionListSerializer
 
 
-class ExamViewSet(viewsets.ModelViewSet):
+class ExamListViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Exam.objects.all()
     serializer_class = ExamListSerializer
 
@@ -24,4 +24,3 @@ class ExamSearch(generics.ListAPIView):
         needle = self.kwargs['needle']
         print(needle)
         return Exam.objects.all()
-

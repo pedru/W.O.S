@@ -105,4 +105,29 @@ public class MainActivityTest {
         onView(withText(text)).perform(click());
         intended(hasComponent(ExamDetailActivity.class.getName()));
     }
+    @Test
+    public void authTest()
+    {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String authtoken = sharedPref.getString("Token","");
+        assertTrue(authtoken.length()>4);
+    }
+
+
+    @Test
+    public void authTest1()
+    {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        sharedPref.edit().clear();
+        sharedPref.edit().apply();
+        mainActivity.authenticate();
+        assertTrue(NetworkManager.getInstance().getAuthtoken().length() > 4);
+        SharedPreferences sharedPref1 = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String authtoken = sharedPref1.getString("Token","");
+        assertTrue(authtoken.length()>4);
+
+    }
+
+
+
 }
