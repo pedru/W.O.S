@@ -91,14 +91,6 @@ public class MainActivity extends AppCompatActivity
 
         examList = findViewById(R.id.examList);
 
-        ImageButton btn = findViewById(R.id.searchButton);
-
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SearchExamActivity.class));
-            }
-        });
 
     }
 
@@ -128,6 +120,10 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_search_exam) {
+            startActivity(new Intent(MainActivity.this, SearchExamActivity.class));
             return true;
         }
 

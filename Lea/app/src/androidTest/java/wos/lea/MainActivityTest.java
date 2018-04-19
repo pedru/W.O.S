@@ -66,32 +66,9 @@ public class MainActivityTest {
     }
 
     @Test
-    public void authTest()
-    {
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        String authtoken = sharedPref.getString("Token","");
-        assertTrue(authtoken.length()>4);
-    }
-
-
-    @Test
-    public void authTest1()
-    {
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        sharedPref.edit().clear();
-        sharedPref.edit().apply();
-        mainActivity.authenticate();
-        assertTrue(NetworkManager.getInstance().getAuthtoken().length() > 4);
-        SharedPreferences sharedPref1 = getActivity().getPreferences(Context.MODE_PRIVATE);
-        String authtoken = sharedPref1.getString("Token","");
-        assertTrue(authtoken.length()>4);
-
-    }
-
-    @Test
     public void searchButton() {
-        onView(withId(R.id.searchButton)).check(matches(isClickable()));
-        onView(withId(R.id.searchButton)).perform(click());
+        onView(withId(R.id.action_search_exam)).check(matches(isClickable()));
+        onView(withId(R.id.action_search_exam)).perform(click());
         intended(hasComponent(SearchExamActivity.class.getName()));
     }
 
@@ -108,7 +85,7 @@ public class MainActivityTest {
     @Test
     public void authTest()
     {
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = testRule.getActivity().getPreferences(Context.MODE_PRIVATE);
         String authtoken = sharedPref.getString("Token","");
         assertTrue(authtoken.length()>4);
     }
@@ -117,12 +94,12 @@ public class MainActivityTest {
     @Test
     public void authTest1()
     {
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = testRule.getActivity().getPreferences(Context.MODE_PRIVATE);
         sharedPref.edit().clear();
         sharedPref.edit().apply();
-        mainActivity.authenticate();
+        testRule.getActivity().authenticate();
         assertTrue(NetworkManager.getInstance().getAuthtoken().length() > 4);
-        SharedPreferences sharedPref1 = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref1 = testRule.getActivity().getPreferences(Context.MODE_PRIVATE);
         String authtoken = sharedPref1.getString("Token","");
         assertTrue(authtoken.length()>4);
 
