@@ -92,7 +92,7 @@ public class MainActivityTest {
 
 
     @Test
-    public void authTest1()
+    public void auth1Test()
     {
         SharedPreferences sharedPref = testRule.getActivity().getPreferences(Context.MODE_PRIVATE);
         sharedPref.edit().clear();
