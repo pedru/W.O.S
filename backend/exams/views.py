@@ -4,7 +4,7 @@ from exams.models import Exam, Question
 from exams.serializers import ExamListSerializer, QuestionListSerializer
 
 
-class ExamListViewSet(viewsets.ReadOnlyModelViewSet):
+class ExamViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Exam.objects.all()
     serializer_class = ExamListSerializer
 
