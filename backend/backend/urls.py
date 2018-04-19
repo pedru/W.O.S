@@ -33,5 +33,5 @@ urlpatterns = [
     url(r'^api/', include(router.urls)),
     path('admin/', admin.site.urls),
     url('^$', RedirectView.as_view(url=reverse_lazy('admin:index'))),
-    url('^api/user/create', create_user)
+    url('^api/user/token', create_user)
 ]
