@@ -19,10 +19,11 @@ from django.conf.urls import url, include
 from django.views.generic import RedirectView
 from rest_framework import routers
 
-from exams.views import ExamListViewSet
+from exams.views import ExamViewSet
+from users.views import create_user
 
 router = routers.DefaultRouter()
-router.register(r'exams', ExamListViewSet)
+router.register(r'exams', ExamViewSet)
 
 
 admin.site.site_header = 'LeaBackend'
@@ -31,5 +32,6 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^api/', include(router.urls)),
     path('admin/', admin.site.urls),
-    url('^$', RedirectView.as_view(url=reverse_lazy('admin:index')))
+    url('^$', RedirectView.as_view(url=reverse_lazy('admin:index'))),
+    url('^api/user/create', create_user)
 ]

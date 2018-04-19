@@ -1,10 +1,14 @@
 from rest_framework import viewsets
 
-from exams.models import Exam
-from exams.serializers import ExamListSerializer
+from exams.models import Exam, Question
+from exams.serializers import ExamListSerializer, QuestionListSerializer
 
 
-class ExamListViewSet(viewsets.ReadOnlyModelViewSet):
+class ExamViewSet(viewsets.ModelViewSet):
     queryset = Exam.objects.all()
     serializer_class = ExamListSerializer
 
+
+class QuestionViewSet(viewsets.ModelViewSet):
+    queryset = Question.objects.all()
+    serializer_class = QuestionListSerializer
