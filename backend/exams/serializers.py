@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from exams.models import Exam, Question, Lecture
-from studies.serializers import StudyListSerializer
 
 
 class QuestionListSerializer(serializers.ModelSerializer):
