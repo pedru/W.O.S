@@ -35,6 +35,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import wos.lea.networking.Exam;
 import wos.lea.networking.LeaRestService;
 import wos.lea.networking.NetworkManager;
+import wos.lea.networking.TokenResponse;
 
 
 public class MainActivity extends AppCompatActivity
@@ -163,29 +164,26 @@ public class MainActivity extends AppCompatActivity
 
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         String authtoken = sharedPref.getString("Token","");
+        TokenResponse tr;
 
-        if(authtoken.length() < 4)
-        {
-            // GET NEW TOKEN
-            /*
-            Call<String> call = NetworkManager.getInstance().leaRestService.getAuthToken();
-            call.enqueue(new Callback<String>() {
+
+        if(authtoken.length() != 0) { // No token set
+
+            Call<TokenResponse> call = NetworkManager.getInstance().leaRestService.getAuthToken();
+            call.enqueue(new Callback<TokenResponse>() {
                 @Override
-                public void onResponse(Call<String> call, Response<String> response) {
-
+                public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
+                    TokenResponse tr = new TokenResponse();
                     Log.d("AUTH", "Successful");
-                   authtoken  = response.body();
+                   tr  = response.body();
+                    saveAuthFile(tr.getToken());
                 }
 
                 @Override
-                public void onFailure(Call<String> call, Throwable t) {
-                    authtoken  = "";
+                public void onFailure(Call<TokenResponse> call, Throwable t) {
                     Log.d("AUTH", "FAIL");
                 }
             });
-
-            */
-            saveAuthFile("123456");
         }
 
         NetworkManager.getInstance().setAuthtoken(authtoken);

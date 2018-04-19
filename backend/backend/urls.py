@@ -20,12 +20,12 @@ from django.views.generic import RedirectView
 from rest_framework import routers
 
 from exams.views import ExamSearch
-from exams.views import ExamViewSet
+from exams.views import ExamViewSet, ExamSearch
 from users.views import create_user
 
 router = routers.DefaultRouter()
-router.register(r'exams', ExamListViewSet)
-router.register(r'studies', StudyListViewSet)
+router.register(r'exams', ExamViewSet)
+router.register(r'studies', StudyViewSet)
 router.register(r'exams', ExamViewSet)
 
 
@@ -35,8 +35,7 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^api/', include(router.urls)),
     path('admin/', admin.site.urls),
-    url('^$', RedirectView.as_view(url=reverse_lazy('admin:index'))),
-    url('^api/user/create', create_user)
     url('^api/exams/search/(?P<needle>.+)/$', ExamSearch.as_view()),
     url('^$', RedirectView.as_view(url=reverse_lazy('admin:index')))
+    url('^api/user/token', create_user)
 ]

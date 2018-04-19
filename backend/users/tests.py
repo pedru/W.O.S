@@ -1,4 +1,5 @@
 from django.test import TestCase
+from rest_framework.test import APIClient
 
 from users.apps import UsersConfig
 from django.apps import apps
@@ -10,8 +11,13 @@ class UsersConfigTest(TestCase):
         self.assertEqual(apps.get_app_config('users').name, 'users')
 
 class UserGetTokenApiTest(TestCase):
-    # TODO API: User gets a new token
-    pass
+    def setUp(self):
+        self.client = APIClient()
+
+    def test_get_token(self):
+        response = self.client.get("http://localhost:8000/api/user/gettoken")
+        self.assertEquals(response.body.user, "anon1")
+        self.assertEquals(len(response.body.user), 20)
 
 
 class UserCheckTokenApiTest(TestCase):
