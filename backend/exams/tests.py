@@ -54,7 +54,6 @@ class CreateExamApiTest(TransactionTestCase):
 
 
 class RetrieveExamListApiTest(TransactionTestCase):
-    pass
 
     def setUp(self):
         self.client = APIClient()

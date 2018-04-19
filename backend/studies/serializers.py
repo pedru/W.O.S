@@ -7,4 +7,9 @@ class StudyListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Study
-        fields = ('id', 'name', 'exams')
+        fields = ('id', 'name')
+
+class StudyDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Study
+        fields = StudyListSerializer.Meta.fields + ('lectures',)

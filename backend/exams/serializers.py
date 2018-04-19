@@ -18,9 +18,8 @@ class LectureSerializer(serializers.ModelSerializer):
 
 class ExamListSerializer(serializers.ModelSerializer):
     lecture = LectureSerializer()
-    study = StudyListSerializer()
     questions = QuestionListSerializer(many=True)
 
     class Meta:
         model = Exam
-        fields = ('id', 'lecture', 'study', 'date', 'owner', 'created', 'questions')
+        fields = ('id', 'lecture', 'date', 'owner', 'created', 'questions')
