@@ -72,7 +72,7 @@ public class SearchExamTest extends ActivityInstrumentationTestCase2<SearchExamA
         //onView(withId(R.id.studyProgramSpinner)).check(matches(withSpinnerText(containsString("Business Services"))));
 
         onView(withId(R.id.courseSpinner)).perform(click());
-        onData(anything()).atPosition(2).perform(click());
+        onData(anything()).atPosition(1).perform(click());
         //onView(withId(R.id.courseSpinner)).check(matches(withSpinnerText(containsString("Computers"))));
     }
 }

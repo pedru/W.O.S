@@ -1,18 +1,18 @@
 package wos.lea;
 
 import android.app.DatePickerDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -28,23 +28,16 @@ import wos.lea.networking.Study;
 import wos.lea.networking.StudyDetail;
 
 public class SearchExamActivity extends AppCompatActivity {
-    Button showCalenderButton;
-    Spinner studyProgramSpinner;
-    Spinner courseSpinner;
-    int d,m,y;
-
-    public ArrayList<Study> getStudies() {
-        return studies;
-    }
-
-    public void setStudies(ArrayList<Study> studies) {
-        this.studies = studies;
-    }
+    private TextView examDate;
+    private Spinner studyProgramSpinner;
+    private Spinner courseSpinner;
+    private int d, m, y;
+    private Calendar selectedDate;
 
     private ArrayList<Study> studies;
-    private Map<String, Study> studies_map;
+    private Map<String, Study> studiesMap;
     private StudyDetail studyDetail;
-    private Map<String, StudyDetail> lecture_map;
+    private Map<String, StudyDetail> lectureMap;
 
 
     @Override
@@ -52,8 +45,7 @@ public class SearchExamActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_exam);
         findControlls();
-        showCalenderButton.setText("Select Date");
-        showCalenderButton.setOnClickListener(new View.OnClickListener() {
+        examDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Calendar calendar = Calendar.getInstance();
@@ -62,9 +54,16 @@ public class SearchExamActivity extends AppCompatActivity {
                 y = calendar.get(Calendar.YEAR);
                 DatePickerDialog pickerDialog = new DatePickerDialog(SearchExamActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        i1+=1;
-                        showCalenderButton.setText(i2 + "." + i1 + "." + i);
+                    public void onDateSet(DatePicker datePicker, int year, int month, int date) {
+                        Calendar c = Calendar.getInstance();
+                        c.set(year, month, date);
+                        selectedDate = c;
+
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("E, dd. MMM yyyy");
+                        dateFormat.setTimeZone(c.getTimeZone());
+                        String dateString = dateFormat.format(c.getTime());
+
+                        examDate.setText(dateString);
                     }
                 }, y, m, d);
                 pickerDialog.show();
@@ -74,7 +73,7 @@ public class SearchExamActivity extends AppCompatActivity {
     }
 
     private void findControlls() {
-        showCalenderButton = findViewById(R.id.dateButton);
+        examDate = findViewById(R.id.examDate);
         studyProgramSpinner = findViewById(R.id.studyProgramSpinner);
         courseSpinner = findViewById(R.id.courseSpinner);
     }
@@ -82,16 +81,16 @@ public class SearchExamActivity extends AppCompatActivity {
 
     private void SetDropdownElements() {
 
-        Call<List<Study>> call = NetworkManager.getInstance().leaRestService.listAllStudies();
+        Call<List<Study>> call = NetworkManager.getInstance().getLeaRestService().listAllStudies();
 
         call.enqueue(new Callback<List<Study>>() {
             @Override
             public void onResponse(Call<List<Study>> call, Response<List<Study>> response) {
                 studies = new ArrayList<>(response.body());
                 List<String> categories = new ArrayList<>();
-                studies_map = new HashMap<>();
-                for(Study study : studies){
-                    studies_map.put(study.getName(), study);
+                studiesMap = new HashMap<>();
+                for (Study study : studies) {
+                    studiesMap.put(study.getName(), study);
                     categories.add(study.getName());
                 }
 
@@ -112,20 +111,23 @@ public class SearchExamActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
-                String study =studyProgramSpinner.getSelectedItem().toString();
+                final String study = studyProgramSpinner.getSelectedItem().toString();
                 //Toast.makeText(getApplicationContext(), "Selected : " + msupplier, Toast.LENGTH_SHORT).show();
-                Integer study_id = studies_map.get(study).getId();
+                Integer study_id = studiesMap.get(study).getId();
 
-                Call<StudyDetail> call = NetworkManager.getInstance().leaRestService.getCourseById(study_id);
+                Call<StudyDetail> call = NetworkManager.getInstance().getLeaRestService().getStudyById(study_id);
 
                 call.enqueue(new Callback<StudyDetail>() {
                     @Override
                     public void onResponse(Call<StudyDetail> call, Response<StudyDetail> response) {
                         studyDetail = response.body();
+                        if (studyDetail == null || studyDetail.getLectures() == null) {
+                            return;
+                        }
                         List<String> categories = new ArrayList<>();
-                        lecture_map = new HashMap<>();
-                        for(Lecture lecture : studyDetail.getLectures()){
-                            lecture_map.put(lecture.getName(), studyDetail);
+                        lectureMap = new HashMap<>();
+                        for (Lecture lecture : studyDetail.getLectures()) {
+                            lectureMap.put(lecture.getName(), studyDetail);
                             categories.add(lecture.getName());
                         }
 
@@ -163,5 +165,13 @@ public class SearchExamActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public ArrayList<Study> getStudies() {
+        return studies;
+    }
+
+    public void setStudies(ArrayList<Study> studies) {
+        this.studies = studies;
     }
 }

@@ -22,7 +22,7 @@ public interface LeaRestService {
     Call<List<Study>> listAllStudies();
 
     @GET("api/studies/{id}")
-    Call<StudyDetail> getCourseById(@Path("id") int id);
+    Call<StudyDetail> getStudyById(@Path("id") int id);
 
     @GET("api/user/token")
     Call<TokenResponse> getAuthToken();
