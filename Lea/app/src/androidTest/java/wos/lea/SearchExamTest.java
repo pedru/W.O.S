@@ -57,12 +57,12 @@ public class SearchExamTest extends ActivityInstrumentationTestCase2<SearchExamA
     @Test
     public void CalenderTest() {
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).check(doesNotExist());
-        onView(withId(R.id.dateButton)).perform(click());
+        onView(withId(R.id.examDate)).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).check(matches(isDisplayed()));
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2018, 8, 25));
         onView(withText("OK")).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).check(doesNotExist());
-        onView(allOf(withId(R.id.dateButton), withText("25.8.2018")));
+        onView(allOf(withId(R.id.examDate), withText("25.8.2018")));
     }
 
     @Test
