@@ -1,13 +1,21 @@
 package wos.lea.networking;
 
-/**
- * Created by u11s65 on 11.04.2018.
- */
+import java.util.List;
 
 public class Lecture {
 
     private int id;
     private String name;
+
+    private List<Exam> exams;
+
+    public List<Exam> getExams() {
+        return exams;
+    }
+
+    public void setExams(List<Exam> exams) {
+        this.exams = exams;
+    }
 
     public int getId() {
         return id;

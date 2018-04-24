@@ -157,6 +157,10 @@ public class SearchExamActivity extends AppCompatActivity {
                                        int arg2, long arg3) {
                 String lecture = courseSpinner.getSelectedItem().toString();
                 Toast.makeText(getApplicationContext(), "Selected : " + lecture, Toast.LENGTH_SHORT).show();
+
+                //Call<Lecture> call = NetworkManager.getInstance().getLeaRestService().getLectureById();
+                //TODO: show exam dates
+
             }
 
             @Override
