@@ -20,7 +20,7 @@ class Exam(models.Model):
     to a user.
     """
     name_max_length = 200  # TODO: what is the maximum length
-    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)
+    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, related_name='exams')
     date = models.DateField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     subscribed = models.ManyToManyField(User, related_name="exams", blank=True)
@@ -28,6 +28,10 @@ class Exam(models.Model):
 
     def __str__(self):
         return "{} ({}) - {}".format(self.lecture, self.study.name, self.date)
+
+    @property
+    def question_count(self):
+        return self.questions.count()
 
 
 class AdditionalInformation(models.Model):

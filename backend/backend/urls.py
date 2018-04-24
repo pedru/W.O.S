@@ -19,7 +19,7 @@ from django.conf.urls import url, include
 from django.views.generic import RedirectView
 from rest_framework import routers
 
-from exams.views import ExamSearch, ExamViewSet
+from exams.views import ExamSearch, ExamViewSet, LectureViewSet
 from studies.views import StudyListViewSet
 from users.views import create_user
 
@@ -27,6 +27,7 @@ router = routers.DefaultRouter()
 router.register(r'exams', ExamViewSet)
 router.register(r'studies', StudyListViewSet)
 router.register(r'exams', ExamViewSet)
+router.register(r'lecture', LectureViewSet)
 
 
 admin.site.site_header = 'LeaBackend'

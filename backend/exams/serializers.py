@@ -12,13 +12,29 @@ class QuestionListSerializer(serializers.ModelSerializer):
 class LectureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lecture
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'exams')
 
 
 class ExamListSerializer(serializers.ModelSerializer):
     lecture = LectureSerializer()
+
+    class Meta:
+        model = Exam
+        fields = ('id', 'lecture', 'date', 'owner', 'created', 'question_count')
+
+
+class ExamDetailSerializer(ExamListSerializer):
     questions = QuestionListSerializer(many=True)
 
     class Meta:
         model = Exam
-        fields = ('id', 'lecture', 'date', 'owner', 'created', 'questions')
+        fields = ExamListSerializer.Meta.fields + ('questions',)
+
+
+class LectureDetailSerializer(LectureSerializer):
+    exams = ExamListSerializer(many=True)
+
+    class Meta:
+        model = Lecture
+        fields = LectureSerializer.Meta.fields + ('exams',)
+

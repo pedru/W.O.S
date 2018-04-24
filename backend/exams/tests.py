@@ -26,6 +26,14 @@ class ExamTestCase(TransactionTestCase):
     def test_str(self):
         self.assertEquals(str(self.test_exam), "Foolecture (Foostudy) - 2018-06-26")
 
+    def test_question_count(self):
+        self.assertEquals(self.test_exam.question_count, 0)
+        mixer.blend(Question, exam=self.test_exam)
+        mixer.blend(Question, exam=self.test_exam)
+        self.assertEquals(self.test_exam.question_count, 2)
+        mixer.blend(Question, exam=self.test_exam)
+        self.assertEquals(self.test_exam.question_count, 3)
+
 
 class LectureTestCase(SimpleTestCase):
     def setUp(self):
