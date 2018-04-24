@@ -27,7 +27,7 @@ class Exam(models.Model):
     created = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return "{} ({}) - {}".format(self.lecture, self.study.name, self.date)
+        return "{}".format(self.lecture)
 
     @property
     def question_count(self):
