@@ -37,4 +37,3 @@ class LectureDetailSerializer(LectureSerializer):
     class Meta:
         model = Lecture
         fields = LectureSerializer.Meta.fields + ('exams',)
-
