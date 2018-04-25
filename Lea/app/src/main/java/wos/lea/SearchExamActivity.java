@@ -1,31 +1,60 @@
 package wos.lea;
 
 import android.app.DatePickerDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Debug;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import wos.lea.networking.Exam;
+import wos.lea.networking.ExamDetail;
+import wos.lea.networking.Lecture;
+import wos.lea.networking.LectureDetail;
+import wos.lea.networking.NetworkManager;
+import wos.lea.networking.Study;
+import wos.lea.networking.StudyDetail;
+
 
 public class SearchExamActivity extends AppCompatActivity {
-    Button showCalenderButton;
-    Spinner studyProgramSpinner;
-    Spinner courseSpinner;
-    int d,m,y;
+    private TextView examDate;
+    private Spinner studyProgramSpinner;
+    private Spinner courseSpinner;
+    private ListView examList;
+    private int d, m, y;
+    private Calendar selectedDate;
+
+    private ArrayList<Study> studies;
+    private Map<String, Study> studiesMap;
+    private StudyDetail studyDetail;
+    private Map<String, Lecture> lectureMap;
+    private LectureDetail lecture;
+    private ArrayList<Exam> exams;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_exam);
         findControlls();
-        showCalenderButton.setText("Select Date");
-        showCalenderButton.setOnClickListener(new View.OnClickListener() {
+        examDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Calendar calendar = Calendar.getInstance();
@@ -34,9 +63,16 @@ public class SearchExamActivity extends AppCompatActivity {
                 y = calendar.get(Calendar.YEAR);
                 DatePickerDialog pickerDialog = new DatePickerDialog(SearchExamActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        i1+=1;
-                        showCalenderButton.setText(i2 + "." + i1 + "." + i);
+                    public void onDateSet(DatePicker datePicker, int year, int month, int date) {
+                        Calendar c = Calendar.getInstance();
+                        c.set(year, month, date);
+                        selectedDate = c;
+
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("E, dd. MMM yyyy");
+                        dateFormat.setTimeZone(c.getTimeZone());
+                        String dateString = dateFormat.format(c.getTime());
+
+                        examDate.setText(dateString);
                     }
                 }, y, m, d);
                 pickerDialog.show();
@@ -46,30 +82,127 @@ public class SearchExamActivity extends AppCompatActivity {
     }
 
     private void findControlls() {
-        showCalenderButton = findViewById(R.id.dateButton);
+        examDate = findViewById(R.id.examDate);
         studyProgramSpinner = findViewById(R.id.studyProgramSpinner);
         courseSpinner = findViewById(R.id.courseSpinner);
+        examList = findViewById(R.id.ExamView);
     }
+
 
     private void SetDropdownElements() {
 
-        // Spinner Drop down elements
-        List<String> categories = new ArrayList<String>();
-        categories.add("Automobile");
-        categories.add("Business Services");
-        categories.add("Computers");
-        categories.add("Education");
-        categories.add("Personal");
-        categories.add("Travel");
+        Call<List<Study>> call = NetworkManager.getInstance().getLeaRestService().listAllStudies();
 
-        // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        call.enqueue(new Callback<List<Study>>() {
+            @Override
+            public void onResponse(Call<List<Study>> call, Response<List<Study>> response) {
+                studies = new ArrayList<>(response.body());
+                List<String> categories = new ArrayList<>();
+                studiesMap = new HashMap<>();
+                for (Study study : studies) {
+                    studiesMap.put(study.getName(), study);
+                    categories.add(study.getName());
+                }
 
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(SearchExamActivity.this, android.R.layout.simple_spinner_item, categories);
+                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                studyProgramSpinner.setAdapter(dataAdapter);
+                //courseSpinner.setAdapter(dataAdapter);
+            }
 
-        // attaching data adapter to spinner
-        studyProgramSpinner.setAdapter(dataAdapter);
-        courseSpinner.setAdapter(dataAdapter);
+            @Override
+            public void onFailure(Call<List<Study>> call, Throwable t) {
+                Log.d("EXAMS", "FAIL");
+            }
+        });
+
+        studyProgramSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                       int arg2, long arg3) {
+                final String study = studyProgramSpinner.getSelectedItem().toString();
+                //Toast.makeText(getApplicationContext(), "Selected : " + msupplier, Toast.LENGTH_SHORT).show();
+                Integer study_id = studiesMap.get(study).getId();
+
+                Call<StudyDetail> call = NetworkManager.getInstance().getLeaRestService().getStudyById(study_id);
+
+                call.enqueue(new Callback<StudyDetail>() {
+                    @Override
+                    public void onResponse(Call<StudyDetail> call, Response<StudyDetail> response) {
+                        studyDetail = response.body();
+                        if (studyDetail == null || studyDetail.getLectures() == null) {
+                            return;
+                        }
+                        List<String> categories = new ArrayList<>();
+                        lectureMap = new HashMap<>();
+                        for (Lecture lecture : studyDetail.getLectures()) {
+                            lectureMap.put(lecture.getName(), lecture);
+                            categories.add(lecture.getName());
+                        }
+
+                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(SearchExamActivity.this, android.R.layout.simple_spinner_item, categories);
+                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        courseSpinner.setAdapter(dataAdapter);
+                    }
+
+                    @Override
+                    public void onFailure(Call<StudyDetail> call, Throwable t) {
+                        Log.d("EXAMS", "FAIL");
+                    }
+                });
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+
+        courseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                       int arg2, long arg3) {
+                String lecture_name = courseSpinner.getSelectedItem().toString();
+                //Toast.makeText(getApplicationContext(), "Selected : " + lecture_name, Toast.LENGTH_SHORT).show();
+                final Integer lecture_id = lectureMap.get(lecture_name).getId();
+                Call<LectureDetail> call = NetworkManager.getInstance().getLeaRestService().getLectureById(lecture_id);
+
+                call.enqueue(new Callback<LectureDetail>() {
+                    @Override
+                    public void onResponse(Call<LectureDetail> call, Response<LectureDetail> response) {
+                        Response<LectureDetail> res = response;
+                        Object body = response.body();
+                        lecture = response.body();
+                        exams = new ArrayList<>();
+                        exams = new ArrayList<>(lecture.getExams());
+                        ExamListAdapter adapter = new ExamListAdapter(SearchExamActivity.this, exams);
+                        examList.setAdapter(adapter);
+                    }
+
+                    @Override
+                    public void onFailure(Call<LectureDetail> call, Throwable t) {
+                        Log.d("EXAMS", "FAIL");
+                    }
+                });
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+    }
+
+    public ArrayList<Study> getStudies() {
+        return studies;
+    }
+
+    public void setStudies(ArrayList<Study> studies) {
+        this.studies = studies;
     }
 }

@@ -24,7 +24,7 @@ public class NetworkManager {
         return ourInstance;
     }
 
-    public LeaRestService leaRestService;
+    private LeaRestService leaRestService;
 
     private String authtoken = "";
 
@@ -32,22 +32,29 @@ public class NetworkManager {
     private String API_BASE_URL = "http://netzweber.at:8080";
 
     private NetworkManager() {
+        try {
+            Class<LeaRestService> testLeaRestService = (Class<LeaRestService>) Class.forName("wos.lea.test.LeaTestRestService");
+            leaRestService = testLeaRestService.newInstance();
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+            leaRestService = createLeaRestService();
+        }
+    }
 
+    private LeaRestService createLeaRestService() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
-                                      @Override
-                                      public Response intercept(Interceptor.Chain chain) throws IOException {
-                                          Request original = chain.request();
+            @Override
+            public Response intercept(Interceptor.Chain chain) throws IOException {
+                Request original = chain.request();
 
-                                          Request request = original.newBuilder()
-                                                  .header("Authorization", "Token " + authtoken)
-                                                  .method(original.method(), original.body())
-                                                  .build();
+                Request request = original.newBuilder()
+                        .header("Authorization", "Token " + authtoken)
+                        .method(original.method(), original.body())
+                        .build();
 
-                                          return chain.proceed(request);
-                                      }
-                                  });
-
+                return chain.proceed(request);
+            }
+        });
 
         OkHttpClient client = httpClient.build();
         Retrofit retrofit = new Retrofit.Builder()
@@ -56,7 +63,7 @@ public class NetworkManager {
                 .client(client)
                 .build();
 
-        leaRestService = retrofit.create(LeaRestService.class);
+        return retrofit.create(LeaRestService.class);
 
     }
 
@@ -66,5 +73,13 @@ public class NetworkManager {
 
     public void setAuthtoken(String authtoken) {
         this.authtoken = authtoken;
+    }
+
+    public LeaRestService getLeaRestService() {
+        return leaRestService;
+    }
+
+    public void setLeaRestService(LeaRestService leaRestService) {
+        this.leaRestService = leaRestService;
     }
 }
