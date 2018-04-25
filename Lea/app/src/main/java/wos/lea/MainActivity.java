@@ -1,5 +1,7 @@
 package wos.lea;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +20,10 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +35,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import wos.lea.networking.Exam;
 import wos.lea.networking.LeaRestService;
 import wos.lea.networking.NetworkManager;
+import wos.lea.networking.TokenResponse;
 
 
 public class MainActivity extends AppCompatActivity
@@ -62,6 +69,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        authenticate();
 
 
         Call<List<Exam>> call = NetworkManager.getInstance().leaRestService.listAllExams();
@@ -148,6 +157,45 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void authenticate() {
+
+
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        String authtoken = sharedPref.getString("Token","");
+        TokenResponse tr;
+
+
+        if(authtoken.length() != 0) { // No token set
+
+            Call<TokenResponse> call = NetworkManager.getInstance().leaRestService.getAuthToken();
+            call.enqueue(new Callback<TokenResponse>() {
+                @Override
+                public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
+                    TokenResponse tr = new TokenResponse();
+                    Log.d("AUTH", "Successful");
+                   tr  = response.body();
+                    saveAuthFile(tr.getToken());
+                }
+
+                @Override
+                public void onFailure(Call<TokenResponse> call, Throwable t) {
+                    Log.d("AUTH", "FAIL");
+                }
+            });
+        }
+
+        NetworkManager.getInstance().setAuthtoken(authtoken);
+    }
+
+    public void saveAuthFile(String token) {
+
+        SharedPreferences sharedPref = this.getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("Token", token);
+        editor.apply();
+
     }
 
 

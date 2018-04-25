@@ -1,15 +1,17 @@
 from rest_framework import viewsets, generics
 
-from exams.models import Exam
-from exams.serializers import ExamListSerializer
-from studies.models import Study
-from studies.serializers import StudyListSerializer
+from exams.models import Exam, Question
+from exams.serializers import ExamListSerializer, QuestionListSerializer
 
 
-class ExamListViewSet(viewsets.ReadOnlyModelViewSet):
+class ExamViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Exam.objects.all()
     serializer_class = ExamListSerializer
 
+
+class QuestionViewSet(viewsets.ModelViewSet):
+    queryset = Question.objects.all()
+    serializer_class = QuestionListSerializer
 
 class ExamSearch(generics.ListAPIView):
     serializer_class = ExamListSerializer
@@ -22,4 +24,3 @@ class ExamSearch(generics.ListAPIView):
         needle = self.kwargs['needle']
         print(needle)
         return Exam.objects.all()
-
