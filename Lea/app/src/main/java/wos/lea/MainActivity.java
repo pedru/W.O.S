@@ -79,8 +79,20 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<List<Exam>> call, Response<List<Exam>> response) {
                 exams = new ArrayList<>(response.body());
-                ExamListAdapter adapter = new ExamListAdapter(MainActivity.this, exams);
-                examList.setAdapter(adapter);
+             //   exams = new ArrayList<>();
+                if(exams.isEmpty())
+                {
+                    findViewById(R.id.exams_layout).setVisibility(View.GONE);
+                    findViewById(R.id.empty_exams_layout).setVisibility(View.VISIBLE);
+
+                }
+                else {
+
+                    findViewById(R.id.exams_layout).setVisibility(View.VISIBLE);
+                    findViewById(R.id.empty_exams_layout).setVisibility(View.GONE);
+                    ExamListAdapter adapter = new ExamListAdapter(MainActivity.this, exams);
+                    examList.setAdapter(adapter);
+                }
             }
 
             @Override
@@ -90,6 +102,9 @@ public class MainActivity extends AppCompatActivity
         });
 
         examList = findViewById(R.id.examList);
+
+
+
 
         ImageButton btn = findViewById(R.id.searchButton);
 

@@ -3,6 +3,7 @@ package wos.lea;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.constraint.ConstraintLayout;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
@@ -21,7 +22,9 @@ import org.junit.runner.RunWith;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
+import wos.lea.networking.Exam;
 import wos.lea.networking.NetworkManager;
 
 import static org.junit.Assert.*;
@@ -105,6 +108,23 @@ public class MainActivityTest {
         onView(withText(text)).perform(click());
         intended(hasComponent(ExamDetailActivity.class.getName()));
     }
+
+    @Test
+    public void emptyExamList()
+    {
+
+        if(testRule.getActivity().getExams().isEmpty()) {
+            ConstraintLayout emptyExamLayout = testRule.getActivity().findViewById(R.id.empty_exams_layout);
+            assertEquals(0, emptyExamLayout.getVisibility());
+        }
+        else
+        {
+            ConstraintLayout examLayout = testRule.getActivity().findViewById(R.id.exams_layout);
+            assertEquals(0, examLayout.getVisibility());
+        }
+
+    }
+
 
 
 
