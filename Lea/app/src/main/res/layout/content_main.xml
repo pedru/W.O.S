@@ -31,7 +31,8 @@
                 <ImageView
                     android:id="@+id/descriptionFileIcon"
                     android:layout_width="match_parent"
-                    android:layout_height="110dp"
+                    android:layout_height="130dp"
+                    android:layout_marginBottom="20dp"
                     app:srcCompat="@drawable/ic_description_white_24px" />
 
                 <TextView
@@ -40,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:text="Looks like there is \n no exam coming up!  \n Enjoy life! \n \n or \n \n use the search to \n find one!"
                     android:textAlignment="center"
-                    android:textSize="20sp" />
+                    android:textSize="25sp" />
             </LinearLayout>
 
         </RelativeLayout>
