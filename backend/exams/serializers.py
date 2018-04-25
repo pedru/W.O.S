@@ -12,7 +12,7 @@ class QuestionListSerializer(serializers.ModelSerializer):
 class LectureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lecture
-        fields = ('id', 'name', 'exams')
+        fields = ('id', 'name')
 
 
 class ExamListSerializer(serializers.ModelSerializer):
