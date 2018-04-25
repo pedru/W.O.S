@@ -75,5 +75,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateSearch" />
 
+    <ListView
+        android:id="@+id/ExamView"
+        android:layout_width="320dp"
+        android:layout_height="260dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/examDate" />
+
 
 </android.support.constraint.ConstraintLayout>

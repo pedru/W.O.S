@@ -2,12 +2,14 @@ package wos.lea;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +24,8 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import wos.lea.networking.Exam;
+import wos.lea.networking.ExamDetail;
 import wos.lea.networking.Lecture;
 import wos.lea.networking.NetworkManager;
 import wos.lea.networking.Study;
@@ -31,13 +35,16 @@ public class SearchExamActivity extends AppCompatActivity {
     private TextView examDate;
     private Spinner studyProgramSpinner;
     private Spinner courseSpinner;
+    private ListView examList;
     private int d, m, y;
     private Calendar selectedDate;
 
     private ArrayList<Study> studies;
     private Map<String, Study> studiesMap;
     private StudyDetail studyDetail;
-    private Map<String, StudyDetail> lectureMap;
+    private Map<String, Lecture> lectureMap;
+    private Lecture lecture;
+    private ArrayList<Exam> exams;
 
 
     @Override
@@ -76,6 +83,7 @@ public class SearchExamActivity extends AppCompatActivity {
         examDate = findViewById(R.id.examDate);
         studyProgramSpinner = findViewById(R.id.studyProgramSpinner);
         courseSpinner = findViewById(R.id.courseSpinner);
+        examList = findViewById(R.id.ExamView);
     }
 
 
@@ -127,7 +135,7 @@ public class SearchExamActivity extends AppCompatActivity {
                         List<String> categories = new ArrayList<>();
                         lectureMap = new HashMap<>();
                         for (Lecture lecture : studyDetail.getLectures()) {
-                            lectureMap.put(lecture.getName(), studyDetail);
+                            lectureMap.put(lecture.getName(), lecture);
                             categories.add(lecture.getName());
                         }
 
@@ -155,11 +163,28 @@ public class SearchExamActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
-                String lecture = courseSpinner.getSelectedItem().toString();
-                Toast.makeText(getApplicationContext(), "Selected : " + lecture, Toast.LENGTH_SHORT).show();
+                String lecture_name = courseSpinner.getSelectedItem().toString();
+                //Toast.makeText(getApplicationContext(), "Selected : " + lecture_name, Toast.LENGTH_SHORT).show();
+                final Integer lecture_id = lectureMap.get(lecture_name).getId();
+                Call<Lecture> call = NetworkManager.getInstance().getLeaRestService().getExamForLecture(lecture_id);
 
-                //Call<Lecture> call = NetworkManager.getInstance().getLeaRestService().getLectureById();
-                //TODO: show exam dates
+                call.enqueue(new Callback<Lecture>() {
+                    @Override
+                    public void onResponse(Call<Lecture> call, Response<Lecture> response) {
+                        Response<Lecture> res = response;
+                        Object body = response.body();
+                        lecture = response.body();
+                        exams = new ArrayList<>();
+                        //exams = lecture.exams;
+                        ExamListAdapter adapter = new ExamListAdapter(SearchExamActivity.this, exams);
+                        examList.setAdapter(adapter);
+                    }
+
+                    @Override
+                    public void onFailure(Call<Lecture> call, Throwable t) {
+                        Log.d("EXAMS", "FAIL");
+                    }
+                });
 
             }
 

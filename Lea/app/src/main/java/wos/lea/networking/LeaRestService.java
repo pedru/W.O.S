@@ -30,4 +30,7 @@ public interface LeaRestService {
     @GET("api/user/token")
     Call<TokenResponse> getAuthToken();
 
+    @GET("api/lecture/{id}")
+    Call<Lecture> getExamForLecture(int id);
+
 }

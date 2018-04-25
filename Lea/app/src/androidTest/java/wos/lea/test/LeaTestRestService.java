@@ -51,4 +51,9 @@ public class LeaTestRestService implements LeaRestService {
         return new LeaTestCall<>(response);
     }
 
+    @Override
+    public Call<List<Exam>> getExamForLecture(int id) {
+        return null;
+    }
+
 }
