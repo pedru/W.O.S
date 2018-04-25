@@ -90,8 +90,8 @@ public class MainActivityTest {
 
     @Test
     public void searchButton() {
-        onView(withId(R.id.searchButton)).check(matches(isClickable()));
-        onView(withId(R.id.searchButton)).perform(click());
+        onView(withId(R.id.action_search_exam)).check(matches(isClickable()));
+        onView(withId(R.id.action_search_exam)).perform(click());
         intended(hasComponent(SearchExamActivity.class.getName()));
     }
 

@@ -1,13 +1,12 @@
 package wos.lea.networking;
 
-/**
- * Created by u11s65 on 11.04.2018.
- */
+import java.util.List;
 
 public class Lecture {
 
     private int id;
     private String name;
+
 
     public int getId() {
         return id;
