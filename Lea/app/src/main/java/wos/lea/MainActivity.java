@@ -36,6 +36,7 @@ import wos.lea.networking.Exam;
 import wos.lea.networking.LeaRestService;
 import wos.lea.networking.NetworkManager;
 import wos.lea.networking.TokenResponse;
+import wos.lea.networking.UserDetail;
 
 
 public class MainActivity extends AppCompatActivity
@@ -73,12 +74,15 @@ public class MainActivity extends AppCompatActivity
         authenticate();
 
 
-        Call<List<Exam>> call = NetworkManager.getInstance().leaRestService.listAllExams();
+        Call<UserDetail> call = NetworkManager.getInstance().leaRestService.getMyUser();
 
-        call.enqueue(new Callback<List<Exam>>() {
+        call.enqueue(new Callback<UserDetail>() {
             @Override
-            public void onResponse(Call<List<Exam>> call, Response<List<Exam>> response) {
-                exams = new ArrayList<>(response.body());
+            public void onResponse(Call<UserDetail> call, Response<UserDetail> response) {
+
+                UserDetail userDetail = response.body();
+                Log.d("EXAMS", "RESPONSE: " + response.body().getExams());
+                exams = new ArrayList<>(userDetail.getExams());
              //   exams = new ArrayList<>();
                 if(exams.isEmpty())
                 {
@@ -96,7 +100,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public void onFailure(Call<List<Exam>> call, Throwable t) {
+            public void onFailure(Call<UserDetail> call, Throwable t) {
                 Log.d("EXAMS", "FAIL");
             }
         });
@@ -176,21 +180,23 @@ public class MainActivity extends AppCompatActivity
 
     public void authenticate() {
 
+        //TODO Dummy USER for testing
+            saveAuthFile("026214c37ffba700e0b0389e9c0db7522200bfff");
 
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         String authtoken = sharedPref.getString("Token","");
-        TokenResponse tr;
 
 
-        if(authtoken.length() != 0) { // No token set
+        if(authtoken.length() < 4) { // No token set
 
             Call<TokenResponse> call = NetworkManager.getInstance().leaRestService.getAuthToken();
             call.enqueue(new Callback<TokenResponse>() {
                 @Override
                 public void onResponse(Call<TokenResponse> call, Response<TokenResponse> response) {
-                    TokenResponse tr = new TokenResponse();
-                    Log.d("AUTH", "Successful");
-                   tr  = response.body();
+                    TokenResponse tr;
+                    tr  = response.body();
+                    Log.d("AUTH", "Successful user: " + tr.getUser()+ " TOKEN:" + tr.getToken());
+
                     saveAuthFile(tr.getToken());
                 }
 
@@ -200,6 +206,9 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
+
+        Log.d("AUTH", "already logged in token: " + authtoken) ;
+
 
         NetworkManager.getInstance().setAuthtoken(authtoken);
     }
