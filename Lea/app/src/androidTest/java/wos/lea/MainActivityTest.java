@@ -1,8 +1,15 @@
 package wos.lea;
 
+import android.app.Instrumentation;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.test.ActivityInstrumentationTestCase2;
+import android.test.InstrumentationTestCase;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -12,6 +19,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+import wos.lea.networking.NetworkManager;
+
+import static org.junit.Assert.*;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -50,6 +63,29 @@ public class MainActivityTest {
         ListView listView = testRule.getActivity().findViewById(R.id.examList);
         ListAdapter adapter = listView.getAdapter();
         assertNotNull(adapter);
+    }
+
+    @Test
+    public void authTest()
+    {
+        SharedPreferences sharedPref = testRule.getActivity().getPreferences(Context.MODE_PRIVATE);
+        String authtoken = sharedPref.getString("Token","");
+        assertTrue(authtoken.length()>4);
+    }
+
+
+    @Test
+    public void authTest1()
+    {
+        SharedPreferences sharedPref = testRule.getActivity().getPreferences(Context.MODE_PRIVATE);
+        sharedPref.edit().clear();
+        sharedPref.edit().apply();
+        testRule.getActivity().authenticate();
+        assertTrue(NetworkManager.getInstance().getAuthtoken().length() > 4);
+        SharedPreferences sharedPref1 = testRule.getActivity().getPreferences(Context.MODE_PRIVATE);
+        String authtoken = sharedPref1.getString("Token","");
+        assertTrue(authtoken.length()>4);
+
     }
 
     @Test
