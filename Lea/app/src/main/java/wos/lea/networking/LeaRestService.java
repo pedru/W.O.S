@@ -25,12 +25,8 @@ public interface LeaRestService {
     Call<StudyDetail> getStudyById(@Path("id") int id);
 
     @GET("api/lecture/{id}")
-    Call<Lecture> getLectureById(@Path("id") int id);
+    Call<LectureDetail> getLectureById(@Path("id") int id);
 
     @GET("api/user/token")
     Call<TokenResponse> getAuthToken();
-
-    @GET("api/lecture/{id}")
-    Call<Lecture> getExamForLecture(int id);
-
 }

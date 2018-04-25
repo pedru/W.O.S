@@ -27,9 +27,11 @@ import retrofit2.Response;
 import wos.lea.networking.Exam;
 import wos.lea.networking.ExamDetail;
 import wos.lea.networking.Lecture;
+import wos.lea.networking.LectureDetail;
 import wos.lea.networking.NetworkManager;
 import wos.lea.networking.Study;
 import wos.lea.networking.StudyDetail;
+
 
 public class SearchExamActivity extends AppCompatActivity {
     private TextView examDate;
@@ -43,7 +45,7 @@ public class SearchExamActivity extends AppCompatActivity {
     private Map<String, Study> studiesMap;
     private StudyDetail studyDetail;
     private Map<String, Lecture> lectureMap;
-    private Lecture lecture;
+    private LectureDetail lecture;
     private ArrayList<Exam> exams;
 
 
@@ -166,22 +168,22 @@ public class SearchExamActivity extends AppCompatActivity {
                 String lecture_name = courseSpinner.getSelectedItem().toString();
                 //Toast.makeText(getApplicationContext(), "Selected : " + lecture_name, Toast.LENGTH_SHORT).show();
                 final Integer lecture_id = lectureMap.get(lecture_name).getId();
-                Call<Lecture> call = NetworkManager.getInstance().getLeaRestService().getExamForLecture(lecture_id);
+                Call<LectureDetail> call = NetworkManager.getInstance().getLeaRestService().getLectureById(lecture_id);
 
-                call.enqueue(new Callback<Lecture>() {
+                call.enqueue(new Callback<LectureDetail>() {
                     @Override
-                    public void onResponse(Call<Lecture> call, Response<Lecture> response) {
-                        Response<Lecture> res = response;
+                    public void onResponse(Call<LectureDetail> call, Response<LectureDetail> response) {
+                        Response<LectureDetail> res = response;
                         Object body = response.body();
                         lecture = response.body();
                         exams = new ArrayList<>();
-                        //exams = lecture.exams;
+                        exams = new ArrayList<>(lecture.getExams());
                         ExamListAdapter adapter = new ExamListAdapter(SearchExamActivity.this, exams);
                         examList.setAdapter(adapter);
                     }
 
                     @Override
-                    public void onFailure(Call<Lecture> call, Throwable t) {
+                    public void onFailure(Call<LectureDetail> call, Throwable t) {
                         Log.d("EXAMS", "FAIL");
                     }
                 });

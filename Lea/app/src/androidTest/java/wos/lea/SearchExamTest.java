@@ -40,23 +40,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 @RunWith(AndroidJUnit4.class)
-public class SearchExamTest extends ActivityInstrumentationTestCase2<SearchExamActivity> {
+public class SearchExamTest {
 
     @Rule
-    public IntentsTestRule<SearchExamActivity> testRule =
-            new IntentsTestRule<>(SearchExamActivity.class);
+    public IntentsTestRule<SearchExamActivity> testRule = new IntentsTestRule<>(SearchExamActivity.class);
 
     private SearchExamActivity searchExamActivity ;
-    public SearchExamTest() {
-        super(SearchExamActivity.class);
-    }
-
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
-        injectInsrumentation(InstrumentationRegistry.getInstrumentation());
-        searchExamActivity = getActivity();
-    }
 
     @Test
     public void DisplayTest() {
