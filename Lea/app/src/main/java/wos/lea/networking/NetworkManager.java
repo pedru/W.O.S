@@ -24,7 +24,7 @@ public class NetworkManager {
         return ourInstance;
     }
 
-    private LeaRestService leaRestService;
+    public LeaRestService leaRestService;
 
     private String authtoken = "";
 

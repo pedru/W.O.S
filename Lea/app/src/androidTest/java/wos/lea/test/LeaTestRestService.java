@@ -10,6 +10,7 @@ import wos.lea.networking.LectureDetail;
 import wos.lea.networking.Study;
 import wos.lea.networking.StudyDetail;
 import wos.lea.networking.TokenResponse;
+import wos.lea.networking.UserDetail;
 
 public class LeaTestRestService implements LeaRestService {
 
@@ -42,6 +43,11 @@ public class LeaTestRestService implements LeaRestService {
     public Call<StudyDetail> getStudyById(int id) {
         StudyDetail detail = leaTestDatabase.getStudyById(id);
         return new LeaTestCall<>(detail);
+    }
+
+    @Override
+    public Call<UserDetail> getMyUser() {
+       return null;
     }
 
     @Override
