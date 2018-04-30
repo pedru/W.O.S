@@ -9,32 +9,35 @@
 
     <TextView
         android:id="@+id/studyProgramSearch"
-        android:layout_width="109dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="433dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Course"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/studyProgramSpinner"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/studyProgramSpinner" />
 
     <TextView
         android:id="@+id/courseSearch"
-        android:layout_width="106dp"
-        android:layout_height="31dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Study program"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/studyProgramSpinner"
-        app:layout_constraintEnd_toEndOf="@+id/studyProgramSearch"
-        app:layout_constraintStart_toStartOf="@+id/studyProgramSpinner"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/studyProgramSpinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/studyProgramSearch"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/courseSearch" />
 
@@ -42,31 +45,42 @@
         android:id="@+id/courseSpinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/studyProgramSearch" />
 
     <TextView
         android:id="@+id/dateSearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Date"
         android:textSize="16sp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="109dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/courseSpinner"/>
+        app:layout_constraintTop_toBottomOf="@+id/courseSpinner" />
 
-
-
-    <Button
-        android:id="@+id/dateButton"
+    <TextView
+        android:id="@+id/examDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/date_search_button_style"
-        android:text="Button"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:hint="Click to select a date"
+        android:text=""
+        android:textSize="23sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateSearch" />
+
+    <ListView
+        android:id="@+id/ExamView"
+        android:layout_width="320dp"
+        android:layout_height="260dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/examDate" />
 
 
 </android.support.constraint.ConstraintLayout>

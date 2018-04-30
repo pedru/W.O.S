@@ -8,6 +8,7 @@ class Lecture(models.Model):
     Represents a lecture
     """
     name = models.CharField(max_length=150)
+    studies = models.ManyToManyField(Study, related_name='lectures')
 
     def __str__(self):
         return self.name
@@ -19,15 +20,18 @@ class Exam(models.Model):
     to a user.
     """
     name_max_length = 200  # TODO: what is the maximum length
-    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE)
+    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, related_name='exams')
     date = models.DateField()
-    study = models.ForeignKey(Study, on_delete=models.CASCADE, related_name="exams")
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     subscribed = models.ManyToManyField(User, related_name="exams", blank=True)
     created = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return "{} ({}) - {}".format(self.lecture, self.study.name, self.date)
+        return "{}".format(self.lecture)
+
+    @property
+    def question_count(self):
+        return self.questions.count()
 
 
 class AdditionalInformation(models.Model):

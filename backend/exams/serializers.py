@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
 from exams.models import Exam, Question, Lecture
-from studies.serializers import StudyListSerializer
 
 
 class QuestionListSerializer(serializers.ModelSerializer):
@@ -18,9 +17,23 @@ class LectureSerializer(serializers.ModelSerializer):
 
 class ExamListSerializer(serializers.ModelSerializer):
     lecture = LectureSerializer()
-    study = StudyListSerializer()
+
+    class Meta:
+        model = Exam
+        fields = ('id', 'lecture', 'date', 'owner', 'created', 'question_count')
+
+
+class ExamDetailSerializer(ExamListSerializer):
     questions = QuestionListSerializer(many=True)
 
     class Meta:
         model = Exam
-        fields = ('id', 'lecture', 'study', 'date', 'owner', 'created', 'questions')
+        fields = ExamListSerializer.Meta.fields + ('questions',)
+
+
+class LectureDetailSerializer(LectureSerializer):
+    exams = ExamListSerializer(many=True)
+
+    class Meta:
+        model = Lecture
+        fields = LectureSerializer.Meta.fields + ('exams',)
