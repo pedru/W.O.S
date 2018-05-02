@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -64,9 +66,6 @@ public class MainActivity extends AppCompatActivity
         authenticate();
 
         Call<UserDetail> call = NetworkManager.getInstance().leaRestService.getMyUser();
-
-        
-
 
         call.enqueue(new Callback<UserDetail>() {
             @Override
