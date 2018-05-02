@@ -1,4 +1,8 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, generics
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from exams.models import Exam, Question, Lecture
 from exams.serializers import ExamListSerializer, QuestionListSerializer, LectureDetailSerializer, LectureSerializer, \
@@ -42,3 +46,12 @@ class ExamSearch(generics.ListAPIView):
         needle = self.kwargs['needle']
         print(needle)
         return Exam.objects.all()
+
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def subscribe(request):
+    exam_id = request.data['exam_id']
+    exam = get_object_or_404(Exam, pk=exam_id)
+    exam.subscribed.add(request.user)
+    return Response(201)

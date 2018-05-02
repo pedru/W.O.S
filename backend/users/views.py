@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 # @throttle_classes([OncePerDayUserThrottle])
+from exams.models import Exam
 from users.serializers import UserDetailSerializer
 
 

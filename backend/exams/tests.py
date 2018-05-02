@@ -24,7 +24,7 @@ class ExamTestCase(TransactionTestCase):
         self.test_exam = mixer.blend(Exam, lecture=lecture, study=study, date=date(2018, 6, 26))
 
     def test_str(self):
-        self.assertEquals(str(self.test_exam), "Foolecture (Foostudy) - 2018-06-26")
+        self.assertEquals(str(self.test_exam), "Foolecture")
 
     def test_question_count(self):
         self.assertEquals(self.test_exam.question_count, 0)
