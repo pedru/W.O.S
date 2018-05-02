@@ -104,8 +104,8 @@ public class SearchExamActivity extends AppCompatActivity {
                     categories.add(study.getName());
                 }
 
-                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(SearchExamActivity.this, android.R.layout.simple_spinner_item, categories);
-                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(SearchExamActivity.this,R.layout.spinner_item, categories);
+                dataAdapter.setDropDownViewResource(R.layout.spinner_item_list);
                 studyProgramSpinner.setAdapter(dataAdapter);
                 //courseSpinner.setAdapter(dataAdapter);
             }
@@ -141,8 +141,8 @@ public class SearchExamActivity extends AppCompatActivity {
                             categories.add(lecture.getName());
                         }
 
-                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(SearchExamActivity.this, android.R.layout.simple_spinner_item, categories);
-                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(SearchExamActivity.this, R.layout.spinner_item, categories);
+                        dataAdapter.setDropDownViewResource(R.layout.spinner_item_list);
                         courseSpinner.setAdapter(dataAdapter);
                     }
 

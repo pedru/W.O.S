@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        ImageButton btn = findViewById(R.id.searchButton);
+
 
     }
 
