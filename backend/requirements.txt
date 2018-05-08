@@ -1,6 +1,6 @@
-Django==2.0.4
+Django==2.0.5
 djangorestframework==3.8.2
-Faker==0.8.8
+Faker==0.8.13
 mixer==6.0.1
 Markdown==2.6.11
 django-crispy-forms==1.7.2

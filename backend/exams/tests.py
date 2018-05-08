@@ -1,13 +1,18 @@
 from datetime import date
 
+from django.contrib.auth.models import User
 from django.test import TestCase, TransactionTestCase, SimpleTestCase
 from mixer.backend.django import mixer
-from rest_framework.test import APIClient
+from rest_framework.test import APIClient, force_authenticate
 
 from django.apps import apps
 from exams.apps import ExamsConfig
 from exams.models import Exam, Lecture, Question, Answer
 from studies.models import Study
+
+
+class UserTestCase(TransactionTestCase):
+    fixtures = ['test_user']
 
 
 class ExamsConfigTest(SimpleTestCase):
@@ -24,7 +29,7 @@ class ExamTestCase(TransactionTestCase):
         self.test_exam = mixer.blend(Exam, lecture=lecture, study=study, date=date(2018, 6, 26))
 
     def test_str(self):
-        self.assertEquals(str(self.test_exam), "Foolecture (Foostudy) - 2018-06-26")
+        self.assertEquals(str(self.test_exam), "Foolecture")
 
     def test_question_count(self):
         self.assertEquals(self.test_exam.question_count, 0)
@@ -85,9 +90,34 @@ class SearchExamApiTest(TestCase):
     pass
 
 
-class SubscribeToExamDateApiTest(TestCase):
-    # TODO API: Support the action of a user to subscribe to a specific exam date
-    pass
+class SubscribeToExamDateApiTest(UserTestCase):
+
+    def setUp(self):
+        self.user = User.objects.get(pk=1)
+        self.client = APIClient()
+
+    def subscribe_to_exam(self, payload: dict = None):
+        return self.client.post('/api/exams/subscribe', payload, format='json')
+
+    def test_subscribe(self):
+        self.client.force_authenticate(self.user)
+
+        # Omitting parameter
+        response = self.subscribe_to_exam()
+        self.assertEquals(response.status_code, 422)
+
+        # Wrong type of parameter
+        response = self.subscribe_to_exam({'exam_id':'foo'})
+        self.assertEquals(response.status_code, 400)
+
+        # Non-existing exam
+        response = self.subscribe_to_exam({'exam_id': 1})
+        self.assertEquals(response.status_code, 404)
+
+        # Successful subscription
+        mixer.blend(Exam, id=1)
+        response = self.subscribe_to_exam({'exam_id': 1})
+        self.assertEquals(response.status_code, 201)
 
 
 class CreateQuestionApiTest(TestCase):
