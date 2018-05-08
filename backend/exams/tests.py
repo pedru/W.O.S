@@ -100,8 +100,6 @@ class SubscribeToExamDateApiTest(UserTestCase):
         return self.client.post('/api/exams/subscribe', payload, format='json')
 
     def test_subscribe(self):
-        # self.client.headers.update({'Authentication', 'Token {}'.format(self.user)})
-
         self.client.force_authenticate(self.user)
 
         # Omitting parameter
