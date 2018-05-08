@@ -14,7 +14,7 @@ class ExamViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ExamListSerializer
 
     def get_serializer_class(self):
-        if(self.action == 'retrieve'):
+        if (self.action == 'retrieve'):
             return ExamDetailSerializer
         else:
             return ExamListSerializer
@@ -51,7 +51,13 @@ class ExamSearch(generics.ListAPIView):
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def subscribe(request):
+    if 'exam_id' not in request.data:
+        return Response({'detail': 'Missing parameter exam_id'}, 422)
+
     exam_id = request.data['exam_id']
+    if not isinstance(exam_id, int):
+        return Response({'detail': 'exam_id has to be of integer type'}, 400)
+
     exam = get_object_or_404(Exam, pk=exam_id)
     exam.subscribed.add(request.user)
-    return Response(201)
+    return Response({'detail': 'Subscribed to Exam {}'.format(exam)}, 201)
