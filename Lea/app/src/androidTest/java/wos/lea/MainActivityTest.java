@@ -98,6 +98,7 @@ public class MainActivityTest {
         intended(hasComponent(SearchExamActivity.class.getName()));
     }
 
+/*
     @Test
     public void clickOnExamTest() {
         ListView listView = testRule.getActivity().findViewById(R.id.examList);
@@ -108,7 +109,8 @@ public class MainActivityTest {
         onView(withText(text)).perform(click());
         intended(hasComponent(ExamDetailActivity.class.getName()));
     }
-
+*/
+/*
     @Test
     public void emptyExamList()
     {
@@ -123,7 +125,7 @@ public class MainActivityTest {
             assertEquals(0, examLayout.getVisibility());
         }
 
-    }
+    }*/
 
 
 

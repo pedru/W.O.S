@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -106,9 +107,15 @@ public class SearchExamActivity extends AppCompatActivity {
                     categories.add(study.getName());
                 }
 
-                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(SearchExamActivity.this, android.R.layout.simple_spinner_item, categories);
-                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(SearchExamActivity.this,R.layout.spinner_item, categories);
+
+
+
+
+
+                dataAdapter.setDropDownViewResource(R.layout.spinner_item_list);
                 studyProgramSpinner.setAdapter(dataAdapter);
+               // studyProgramSpinner.setSelection(dataAdapter.getCount());
                 //courseSpinner.setAdapter(dataAdapter);
             }
 
@@ -143,8 +150,8 @@ public class SearchExamActivity extends AppCompatActivity {
                             categories.add(lecture.getName());
                         }
 
-                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(SearchExamActivity.this, android.R.layout.simple_spinner_item, categories);
-                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(SearchExamActivity.this, R.layout.spinner_item, categories);
+                        dataAdapter.setDropDownViewResource(R.layout.spinner_item_list);
                         courseSpinner.setAdapter(dataAdapter);
                     }
 
