@@ -228,12 +228,4 @@ public class SearchExamActivity extends AppCompatActivity {
 
         snackbar.show();
     }
-
-    public ArrayList<Study> getStudies() {
-        return studies;
-    }
-
-    public void setStudies(ArrayList<Study> studies) {
-        this.studies = studies;
-    }
 }
