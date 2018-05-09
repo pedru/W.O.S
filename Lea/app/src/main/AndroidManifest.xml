@@ -21,12 +21,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SearchExamActivity"></activity>
+        <activity android:name=".SearchExamActivity" />
         <activity
             android:name=".ExamDetailActivity"
             android:label="@string/title_activity_exam_detail"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".CreateNewExam"></activity>
     </application>
 
 </manifest>

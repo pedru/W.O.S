@@ -102,7 +102,7 @@ public class MainActivityTest {
     public void clickOnExamTest() {
         ListView listView = testRule.getActivity().findViewById(R.id.examList);
         assertNotNull(listView);
-        View v = listView.getChildAt(2);
+        View v = listView.getChildAt(1);
         TextView name = v.findViewById(R.id.name);
         String text = (String) name.getText();
         onView(withText(text)).perform(click());
