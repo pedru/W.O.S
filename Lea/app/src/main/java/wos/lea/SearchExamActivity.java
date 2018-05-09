@@ -6,6 +6,7 @@ import android.os.Debug;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -105,8 +106,14 @@ public class SearchExamActivity extends AppCompatActivity {
                 }
 
                 ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(SearchExamActivity.this,R.layout.spinner_item, categories);
+
+
+
+
+
                 dataAdapter.setDropDownViewResource(R.layout.spinner_item_list);
                 studyProgramSpinner.setAdapter(dataAdapter);
+               // studyProgramSpinner.setSelection(dataAdapter.getCount());
                 //courseSpinner.setAdapter(dataAdapter);
             }
 

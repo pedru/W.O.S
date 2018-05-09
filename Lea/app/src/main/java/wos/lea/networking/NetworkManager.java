@@ -29,7 +29,7 @@ public class NetworkManager {
     private String authtoken = "";
 
 
-    private String API_BASE_URL = "http://netzweber.at:8080";
+    private String API_BASE_URL = "https://netzweber.at:8080";
 
     private NetworkManager() {
         try {
