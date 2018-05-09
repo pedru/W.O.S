@@ -116,7 +116,7 @@ class SubscribeToExamDateApiTest(UserTestCase):
 
         # Successful subscription
         mixer.blend(Exam, id=1)
-        response = self.subscribe_to_exam({'exam_id': 1})
+        response = self.subscribe_to_exam({'exam_id': '1'})
         self.assertEquals(response.status_code, 201)
 
 

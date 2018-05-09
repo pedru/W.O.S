@@ -58,7 +58,9 @@ def subscribe(request):
         return Response({'detail': 'Missing parameter exam_id'}, 422)
 
     exam_id = request.data['exam_id']
-    if not isinstance(exam_id, int):
+    try:
+        exam_id = int(exam_id)
+    except ValueError:
         return Response({'detail': 'exam_id has to be of integer type'}, 400)
 
     exam = get_object_or_404(Exam, pk=exam_id)
