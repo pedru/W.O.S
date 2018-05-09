@@ -19,6 +19,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import wos.lea.networking.Exam;
 import wos.lea.networking.ExamDetail;
+import wos.lea.networking.ExamSubscription;
 import wos.lea.networking.NetworkManager;
 import wos.lea.networking.UserDetail;
 
@@ -28,6 +29,7 @@ public class ExamDetailActivity extends AppCompatActivity {
     private ExamDetail examDetail;
     private ListView questionListView;
     private int id;
+    private boolean canRememberExam;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,13 +99,29 @@ public class ExamDetailActivity extends AppCompatActivity {
         return true;
     }
 
-    private boolean canRememberExam;
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_remember:
+                if (canRememberExam)
+                {
+                    Call<ExamSubscription> call_sub = NetworkManager.getInstance().leaRestService.rememberExam(6);
+                    call_sub.enqueue(new Callback<ExamSubscription>() {
+                                         @Override
+                                         public void onResponse(Call<ExamSubscription> call, Response<ExamSubscription> response) {
+                                             Log.d("subtag", "onresponse " + response);
+                                         }
 
+                                         @Override
+                                         public void onFailure(Call<ExamSubscription> call, Throwable t) {
+                                             Log.d("EXAMS", "FAIL");
+                                         }
+                                     }
+                    );
+                }
                 canRememberExam =! canRememberExam;
+
                 invalidateOptionsMenu();
 
 
