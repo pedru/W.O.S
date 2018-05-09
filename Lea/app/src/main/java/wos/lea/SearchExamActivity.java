@@ -3,6 +3,7 @@ package wos.lea;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.os.Debug;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -178,8 +179,14 @@ public class SearchExamActivity extends AppCompatActivity {
                         lecture = response.body();
                         exams = new ArrayList<>();
                         exams = new ArrayList<>(lecture.getExams());
-                        ExamListAdapter adapter = new ExamListAdapter(SearchExamActivity.this, exams);
-                        examList.setAdapter(adapter);
+                        if (exams.isEmpty()){
+                            findViewById(R.id.noExamsText).setVisibility(TextView.VISIBLE);
+                            findViewById(R.id.ExamView).setVisibility(TextView.INVISIBLE);
+                        }
+                        else {
+                            ExamListAdapter adapter = new ExamListAdapter(SearchExamActivity.this, exams);
+                            examList.setAdapter(adapter);
+                        }
                     }
 
                     @Override
