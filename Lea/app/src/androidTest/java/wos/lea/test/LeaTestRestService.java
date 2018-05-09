@@ -47,7 +47,8 @@ public class LeaTestRestService implements LeaRestService {
 
     @Override
     public Call<UserDetail> getMyUser() {
-       return null;
+        UserDetail detail = leaTestDatabase.getMyUsers();
+        return new LeaTestCall<>(detail);
     }
 
     @Override

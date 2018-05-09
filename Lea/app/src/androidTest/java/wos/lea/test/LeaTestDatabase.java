@@ -15,6 +15,7 @@ import wos.lea.networking.LectureDetail;
 import wos.lea.networking.Question;
 import wos.lea.networking.Study;
 import wos.lea.networking.StudyDetail;
+import wos.lea.networking.UserDetail;
 
 public class LeaTestDatabase {
 
@@ -23,6 +24,7 @@ public class LeaTestDatabase {
     private List<Study> studies = new ArrayList<>();
     private List<Lecture> lectures = new ArrayList<>();
     private LectureDetail lecture;
+    private UserDetail users;
 
     private Map<Study, Lecture> studyLectureMap = new HashMap<>();
     private Map<Lecture, Exam> lectureExamMap = new HashMap<>();
@@ -33,8 +35,7 @@ public class LeaTestDatabase {
         initStudies();
         initExams();
         initLectureDetail();
-
-
+        initUserDetals();
 
     }
 
@@ -132,6 +133,14 @@ public class LeaTestDatabase {
         lecture.setName("Softwaretechnologie");
     }
 
+    public void initUserDetals(){
+        users = new UserDetail();
+        users.setExams(allExams);
+        users.setUsername("Test ABC");
+        users.setIdM(1);
+    }
+
+
     public List<Exam> getAllExams() {
         return (List<Exam>) allExams;
     }
@@ -163,5 +172,9 @@ public class LeaTestDatabase {
 
     public LectureDetail getLectureById(int id) {
         return lecture;
+    }
+
+    public UserDetail getMyUsers() {
+        return users;
     }
 }
