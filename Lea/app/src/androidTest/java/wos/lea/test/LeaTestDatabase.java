@@ -15,6 +15,7 @@ import wos.lea.networking.LectureDetail;
 import wos.lea.networking.Question;
 import wos.lea.networking.Study;
 import wos.lea.networking.StudyDetail;
+import wos.lea.networking.UserDetail;
 
 public class LeaTestDatabase {
 
@@ -22,7 +23,8 @@ public class LeaTestDatabase {
     private List<Exam> savedExams = new ArrayList<>();
     private List<Study> studies = new ArrayList<>();
     private List<Lecture> lectures = new ArrayList<>();
-    private LectureDetail lecture;
+    private List<LectureDetail> lecture = new ArrayList<>();
+    private UserDetail users;
 
     private Map<Study, Lecture> studyLectureMap = new HashMap<>();
     private Map<Lecture, Exam> lectureExamMap = new HashMap<>();
@@ -33,8 +35,7 @@ public class LeaTestDatabase {
         initStudies();
         initExams();
         initLectureDetail();
-
-
+        initUserDetals();
 
     }
 
@@ -126,11 +127,29 @@ public class LeaTestDatabase {
     }
 
     public void initLectureDetail(){
-        lecture = new LectureDetail();
-        lecture.setExams(allExams);
-        lecture.setId(0);
-        lecture.setName("Softwaretechnologie");
+        LectureDetail lecture1 = new LectureDetail();
+        lecture1.setExams(allExams);
+        lecture1.setId(0);
+        lecture1.setName("Softwaretechnologie");
+
+        lecture.add(lecture1);
+
+        LectureDetail lecture2 = new LectureDetail();
+        List <Exam> noExams = new ArrayList<Exam>();
+        lecture2.setExams(noExams);
+        lecture2.setId(1);
+        lecture2.setName("Analysis 1");
+
+        lecture.add(lecture2);
     }
+
+    public void initUserDetals(){
+        users = new UserDetail();
+        users.setExams(allExams);
+        users.setUsername("Test ABC");
+        users.setIdM(1);
+    }
+
 
     public List<Exam> getAllExams() {
         return (List<Exam>) allExams;
@@ -162,6 +181,15 @@ public class LeaTestDatabase {
     }
 
     public LectureDetail getLectureById(int id) {
-        return lecture;
+        for (LectureDetail tmp: lecture) {
+            if (tmp.getId() == id) {
+                return (LectureDetail) tmp;
+            }
+        }
+        return null;
+    }
+
+    public UserDetail getMyUsers() {
+        return users;
     }
 }
