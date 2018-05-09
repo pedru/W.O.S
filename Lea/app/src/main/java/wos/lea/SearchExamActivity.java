@@ -1,6 +1,7 @@
 package wos.lea;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Debug;
 import android.support.design.widget.Snackbar;
@@ -182,6 +183,12 @@ public class SearchExamActivity extends AppCompatActivity {
                         if (exams.isEmpty()){
                             findViewById(R.id.noExamsText).setVisibility(TextView.VISIBLE);
                             findViewById(R.id.ExamView).setVisibility(TextView.INVISIBLE);
+
+                            View view = findViewById(R.id.createNewExam);
+                            String message = "Do you want to create a new exam?";
+                            int duration = Snackbar.LENGTH_INDEFINITE;
+
+                            showSnackbar(view, message, duration);
                         }
                         else {
                             ExamListAdapter adapter = new ExamListAdapter(SearchExamActivity.this, exams);
@@ -203,6 +210,23 @@ public class SearchExamActivity extends AppCompatActivity {
 
             }
         });
+    }
+    public void showSnackbar(View view, String message, int duration)
+    {
+        // Create snackbar
+        final Snackbar snackbar = Snackbar.make(view, message, duration);
+
+        // Set an action on it, and a handler
+        snackbar.setAction("CREATE", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //snackbar.dismiss();
+                Intent intent = new Intent(SearchExamActivity.this, CreateNewExam.class);
+                startActivity(intent);
+            }
+        });
+
+        snackbar.show();
     }
 
     public ArrayList<Study> getStudies() {

@@ -129,9 +129,11 @@ public class SearchExamTest {
         onView(withText("OK")).perform(click());
 
         ListView listView = testRule.getActivity().findViewById(R.id.ExamView);
-        //assertNull(listView);
 
         onView(withId(R.id.noExamsText)).check(matches(isDisplayed()));
+        onView(allOf(withId(R.id.createNewExam))).check(matches(isDisplayed()));
+        onView(withText("CREATE")).perform(click());
+        intended(hasComponent(CreateNewExam.class.getName()));
     }
 
 
