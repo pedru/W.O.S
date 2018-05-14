@@ -1,6 +1,7 @@
 package wos.lea;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Debug;
@@ -49,6 +50,7 @@ public class SearchExamActivity extends AppCompatActivity {
     private Map<String, Lecture> lectureMap;
     private LectureDetail lecture;
     private ArrayList<Exam> exams;
+    private Snackbar snackbar;
 
 
     @Override
@@ -81,6 +83,11 @@ public class SearchExamActivity extends AppCompatActivity {
             }
         });
         SetDropdownElements();
+
+        View view = findViewById(R.id.createNewExam);
+        String message = "Do you want to create a new exam?";
+        int duration = Snackbar.LENGTH_INDEFINITE;
+        snackbar = Snackbar.make(view, message, duration);
     }
 
     private void findControlls() {
@@ -184,15 +191,16 @@ public class SearchExamActivity extends AppCompatActivity {
                             findViewById(R.id.noExamsText).setVisibility(TextView.VISIBLE);
                             findViewById(R.id.ExamView).setVisibility(TextView.INVISIBLE);
 
-                            View view = findViewById(R.id.createNewExam);
-                            String message = "Do you want to create a new exam?";
-                            int duration = Snackbar.LENGTH_INDEFINITE;
-
-                            showSnackbar(view, message, duration);
+                            showSnackbar(snackbar);
                         }
                         else {
+                            findViewById(R.id.noExamsText).setVisibility(TextView.INVISIBLE);
+                            findViewById(R.id.ExamView).setVisibility(TextView.VISIBLE);
+                            //findViewById(R.id.createNewExam).setVisibility(TextView.INVISIBLE);
                             ExamListAdapter adapter = new ExamListAdapter(SearchExamActivity.this, exams);
                             examList.setAdapter(adapter);
+                            hideSnackbar(snackbar);
+
                         }
                     }
 
@@ -211,10 +219,8 @@ public class SearchExamActivity extends AppCompatActivity {
             }
         });
     }
-    public void showSnackbar(View view, String message, int duration)
+    public void showSnackbar(Snackbar snackbar)
     {
-        // Create snackbar
-        final Snackbar snackbar = Snackbar.make(view, message, duration);
 
         // Set an action on it, and a handler
         snackbar.setAction("CREATE", new View.OnClickListener() {
@@ -225,7 +231,10 @@ public class SearchExamActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
         snackbar.show();
+    }
+
+    public void hideSnackbar(Snackbar snackbar){
+        snackbar.dismiss();
     }
 }
