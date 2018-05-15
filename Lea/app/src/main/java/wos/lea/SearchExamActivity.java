@@ -78,6 +78,13 @@ public class SearchExamActivity extends AppCompatActivity {
                         String dateString = dateFormat.format(c.getTime());
 
                         examDate.setText(dateString);
+
+                        if (exams.isEmpty()){
+                            findViewById(R.id.noExamsText).setVisibility(TextView.VISIBLE);
+                            findViewById(R.id.ExamView).setVisibility(TextView.INVISIBLE);
+
+                            showSnackbar(snackbar);
+                        }
                     }
                 }, y, m, d);
                 pickerDialog.show();
@@ -226,16 +233,33 @@ public class SearchExamActivity extends AppCompatActivity {
             }
         });
     }
-    public void showSnackbar(Snackbar snackbar)
+    public void showSnackbar(final Snackbar snackbar)
     {
-
-        // Set an action on it, and a handler
         snackbar.setAction("CREATE", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //snackbar.dismiss();
-                Intent intent = new Intent(SearchExamActivity.this, CreateNewExam.class);
-                startActivity(intent);
+                String date = examDate.getText().toString();
+                if(date.equals("")){
+                    Context context = getApplicationContext();
+                    CharSequence text = "You have to select a date!";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
+                else{
+                    snackbar.dismiss();
+                    // todo store in database
+                    // todo show new exam in list  from search exam
+
+                    Context context = getApplicationContext();
+                    CharSequence text = "Exam was created!";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
+
             }
         });
         snackbar.show();

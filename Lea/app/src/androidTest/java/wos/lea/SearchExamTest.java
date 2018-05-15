@@ -29,12 +29,15 @@ import static android.support.test.espresso.matcher.ViewMatchers.withContentDesc
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 import android.support.test.espresso.contrib.PickerActions;
 import android.util.Log;
@@ -42,6 +45,8 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
+
+
 
 import java.util.ArrayList;
 
@@ -117,7 +122,7 @@ public class SearchExamTest {
         intended(hasComponent(ExamDetailActivity.class.getName()));
     }
     @Test
-    public void noExamsFound(){
+    public void noExamsFoundSnackbar(){
         //fill spinner
         onView(withId(R.id.studyProgramSpinner)).perform(click());
         onData(anything()).atPosition(0).perform(click());
@@ -133,7 +138,41 @@ public class SearchExamTest {
         onView(withId(R.id.noExamsText)).check(matches(isDisplayed()));
         onView(allOf(withId(R.id.createNewExam))).check(matches(isDisplayed()));
         onView(withText("CREATE")).perform(click());
-        intended(hasComponent(CreateNewExam.class.getName()));
+    }
+
+    @Test
+    public void createExam(){
+        SearchExamActivity activity = testRule.getActivity();
+
+        //fill spinner
+        onView(withId(R.id.studyProgramSpinner)).perform(click());
+        onData(anything()).atPosition(0).perform(click());
+        onView(withId(R.id.courseSpinner)).perform(click());
+        onData(anything()).atPosition(1).perform(click());
+        onView(withId(R.id.examDate)).perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).check(matches(isDisplayed()));
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2018, 8, 25));
+        onView(withText("OK")).perform(click());
+        onView(withText("CREATE")).perform(click());
+
+        onView(withText("Exam was created!")).inRoot(withDecorView(not(is(activity.getWindow().getDecorView())))).check(matches(isDisplayed()));
+        //TODO test if exam is in list
+    }
+
+    @Test
+    public void createExamNoDate(){
+        //todo
+        SearchExamActivity activity = testRule.getActivity();
+
+        //fill spinner
+        onView(withId(R.id.studyProgramSpinner)).perform(click());
+        onData(anything()).atPosition(0).perform(click());
+        onView(withId(R.id.courseSpinner)).perform(click());
+        onData(anything()).atPosition(1).perform(click());
+
+        onView(allOf(withId(R.id.createNewExam))).perform(click());
+
+        onView(withText("You have to select a date!")).inRoot(withDecorView(not(is(activity.getWindow().getDecorView())))).check(matches(isDisplayed()));
     }
 
 
