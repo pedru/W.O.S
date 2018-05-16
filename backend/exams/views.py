@@ -1,27 +1,37 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, generics
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 import logging
 
+from backend.permissions import IsOwnerOrReadOnly
 from exams.models import Exam, Question, Lecture
 from exams.serializers import ExamListSerializer, QuestionListSerializer, LectureDetailSerializer, LectureSerializer, \
-    ExamDetailSerializer
-
+    ExamDetailSerializer, ExamCreateSerializer
 
 logger = logging.getLogger(__name__)
 
-class ExamViewSet(viewsets.ReadOnlyModelViewSet):
+
+class ExamViewSet(viewsets.ModelViewSet):
     queryset = Exam.objects.all()
     serializer_class = ExamListSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
+    authentication_classes = (TokenAuthentication,)
 
     def get_serializer_class(self):
-        if (self.action == 'retrieve'):
+        print(self.action)
+        if self.action == 'retrieve':
             return ExamDetailSerializer
+        if self.action == 'create':
+            return ExamCreateSerializer
         else:
             return ExamListSerializer
 
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user, lecture_id=self.request.data['lecture_id'])
 
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
