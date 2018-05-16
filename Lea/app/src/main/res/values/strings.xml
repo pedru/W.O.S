@@ -11,4 +11,7 @@
     <string name="title_activity_exam_detail">ExamDetailActivity</string>
     <string name="questionText">questionText</string>
     <string name="studyName">studyName</string>
+    <string name="addQuestion">Add question here...</string>
+    <string name="saveQuestionToast">Question submitted</string>
+    <string name="questionTextEmptyToast">\"Please write your question\"</string>
 </resources>

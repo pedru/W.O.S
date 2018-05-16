@@ -19,7 +19,7 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
 
     private List<Question> questions;
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView text;
 
         public MyViewHolder(View view) {
@@ -27,7 +27,15 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
             text = view.findViewById(R.id.question_text);
 
         }
+        @Override
+        public void onClick(View view) {
+
+            Log
+        }
     }
+
+
+
 
 
     public QuestionListAdapter(List<Question> questions) {
@@ -53,4 +61,8 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
     public int getItemCount() {
         return questions.size();
     }
+
+
+
+
 }

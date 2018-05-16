@@ -1,12 +1,15 @@
 package wos.lea;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -72,8 +75,16 @@ public class ExamDetailActivity extends AppCompatActivity {
             }
         });
 
-
-
+        FloatingActionButton fab = findViewById(R.id.add_question);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ExamDetailActivity.this, CreateQuestionActivity.class);
+                int id = getIntent().getIntExtra("examId", 1);
+                intent.putExtra("examId", id);
+                ExamDetailActivity.this.startActivity(intent);
+            }
+        });
 
 
 
@@ -84,5 +95,6 @@ public class ExamDetailActivity extends AppCompatActivity {
 
 
     }
+
 
 }
