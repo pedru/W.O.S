@@ -2,6 +2,7 @@ package wos.lea;
 
 import android.graphics.Movie;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +25,17 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
 
         public MyViewHolder(View view) {
             super(view);
+            view.setOnClickListener(this);
             text = view.findViewById(R.id.question_text);
 
         }
         @Override
         public void onClick(View view) {
 
-            
+            Question question = questions.get(this.getAdapterPosition());
+
+            Log.d("QUESTIONS", "CLICKED " + question.getId());
+
         }
     }
 
@@ -61,6 +66,8 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
     public int getItemCount() {
         return questions.size();
     }
+
+
 
 
 
