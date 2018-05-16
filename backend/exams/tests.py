@@ -91,7 +91,6 @@ class SearchExamApiTest(TestCase):
 
 
 class SubscribeToExamDateApiTest(UserTestCase):
-
     def setUp(self):
         self.user = User.objects.get(pk=1)
         self.client = APIClient()
@@ -118,6 +117,9 @@ class SubscribeToExamDateApiTest(UserTestCase):
         mixer.blend(Exam, id=1)
         response = self.subscribe_to_exam({'exam_id': '1'})
         self.assertEquals(response.status_code, 201)
+
+class UnsubscribeFromExamTestCase(UserTestCase):
+    pass
 
 
 class CreateQuestionApiTest(TestCase):
