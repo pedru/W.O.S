@@ -30,7 +30,7 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
         @Override
         public void onClick(View view) {
 
-            Log
+            
         }
     }
 
