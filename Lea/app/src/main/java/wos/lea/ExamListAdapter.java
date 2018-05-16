@@ -37,7 +37,7 @@ public class ExamListAdapter extends ArrayAdapter<Exam> implements View.OnClickL
         TextView examNameView = (TextView) convertView.findViewById(R.id.name);
         TextView examDateView = (TextView) convertView.findViewById(R.id.date);
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
         Date examDate = exam.getDate();
         examNameView.setText(exam.getLecture().getName());
         examDateView.setText(simpleDateFormat.format(examDate));

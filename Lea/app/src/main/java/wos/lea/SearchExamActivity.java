@@ -1,11 +1,15 @@
 package wos.lea;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Debug;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -47,6 +51,7 @@ public class SearchExamActivity extends AppCompatActivity {
     private Map<String, Lecture> lectureMap;
     private LectureDetail lecture;
     private ArrayList<Exam> exams;
+    private Snackbar snackbar;
 
 
     @Override
@@ -79,6 +84,11 @@ public class SearchExamActivity extends AppCompatActivity {
             }
         });
         SetDropdownElements();
+
+        View view = findViewById(R.id.createNewExam);
+        String message = "Do you want to create a new exam?";
+        int duration = Snackbar.LENGTH_INDEFINITE;
+        snackbar = Snackbar.make(view, message, duration);
     }
 
     private void findControlls() {
@@ -104,9 +114,15 @@ public class SearchExamActivity extends AppCompatActivity {
                     categories.add(study.getName());
                 }
 
-                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(SearchExamActivity.this, android.R.layout.simple_spinner_item, categories);
-                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(SearchExamActivity.this,R.layout.spinner_item, categories);
+
+
+
+
+
+                dataAdapter.setDropDownViewResource(R.layout.spinner_item_list);
                 studyProgramSpinner.setAdapter(dataAdapter);
+               // studyProgramSpinner.setSelection(dataAdapter.getCount());
                 //courseSpinner.setAdapter(dataAdapter);
             }
 
@@ -141,8 +157,8 @@ public class SearchExamActivity extends AppCompatActivity {
                             categories.add(lecture.getName());
                         }
 
-                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(SearchExamActivity.this, android.R.layout.simple_spinner_item, categories);
-                        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(SearchExamActivity.this, R.layout.spinner_item, categories);
+                        dataAdapter.setDropDownViewResource(R.layout.spinner_item_list);
                         courseSpinner.setAdapter(dataAdapter);
                     }
 
@@ -178,8 +194,21 @@ public class SearchExamActivity extends AppCompatActivity {
                         lecture = response.body();
                         exams = new ArrayList<>();
                         exams = new ArrayList<>(lecture.getExams());
-                        ExamListAdapter adapter = new ExamListAdapter(SearchExamActivity.this, exams);
-                        examList.setAdapter(adapter);
+                        if (exams.isEmpty()){
+                            findViewById(R.id.noExamsText).setVisibility(TextView.VISIBLE);
+                            findViewById(R.id.ExamView).setVisibility(TextView.INVISIBLE);
+
+                            showSnackbar(snackbar);
+                        }
+                        else {
+                            findViewById(R.id.noExamsText).setVisibility(TextView.INVISIBLE);
+                            findViewById(R.id.ExamView).setVisibility(TextView.VISIBLE);
+                            //findViewById(R.id.createNewExam).setVisibility(TextView.INVISIBLE);
+                            ExamListAdapter adapter = new ExamListAdapter(SearchExamActivity.this, exams);
+                            examList.setAdapter(adapter);
+                            hideSnackbar(snackbar);
+
+                        }
                     }
 
                     @Override
@@ -197,12 +226,22 @@ public class SearchExamActivity extends AppCompatActivity {
             }
         });
     }
+    public void showSnackbar(Snackbar snackbar)
+    {
 
-    public ArrayList<Study> getStudies() {
-        return studies;
+        // Set an action on it, and a handler
+        snackbar.setAction("CREATE", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //snackbar.dismiss();
+                Intent intent = new Intent(SearchExamActivity.this, CreateNewExam.class);
+                startActivity(intent);
+            }
+        });
+        snackbar.show();
     }
 
-    public void setStudies(ArrayList<Study> studies) {
-        this.studies = studies;
+    public void hideSnackbar(Snackbar snackbar){
+        snackbar.dismiss();
     }
 }
