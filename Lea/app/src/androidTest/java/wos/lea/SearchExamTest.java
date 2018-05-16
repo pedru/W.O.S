@@ -49,6 +49,7 @@ import android.widget.TextView;
 
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 @RunWith(AndroidJUnit4.class)
 public class SearchExamTest {
@@ -169,8 +170,14 @@ public class SearchExamTest {
         onData(anything()).atPosition(0).perform(click());
         onView(withId(R.id.courseSpinner)).perform(click());
         onData(anything()).atPosition(1).perform(click());
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        onView(withText("CREATE")).perform(click());
 
-        onView(allOf(withId(R.id.createNewExam))).perform(click());
+        //onView(allOf(withId(R.id.createNewExam))).perform(click());
 
         onView(withText("You have to select a date!")).inRoot(withDecorView(not(is(activity.getWindow().getDecorView())))).check(matches(isDisplayed()));
     }
