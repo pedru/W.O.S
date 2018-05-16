@@ -154,10 +154,16 @@ public class SearchExamTest {
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).check(matches(isDisplayed()));
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2018, 8, 25));
         onView(withText("OK")).perform(click());
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         onView(withText("CREATE")).perform(click());
 
         onView(withText("Exam was created!")).inRoot(withDecorView(not(is(activity.getWindow().getDecorView())))).check(matches(isDisplayed()));
-        //TODO test if exam is in list
+        ListView listView = testRule.getActivity().findViewById(R.id.ExamView);
+        assertNotNull(listView);
     }
 
     @Test
