@@ -2,6 +2,7 @@ package wos.lea.networking;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -53,7 +54,7 @@ public class NetworkManager {
                         .header("Authorization", "Token " + authtoken)
                         .method(original.method(), original.body())
                         .build();
-
+                Log.d("NETWORK", original.toString());
                 return chain.proceed(request);
             }
         });
