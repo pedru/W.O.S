@@ -1,5 +1,7 @@
 package wos.lea.networking;
 
+import android.util.Log;
+
 import java.util.List;
 
 /**
@@ -34,5 +36,23 @@ public class UserDetail {
 
     public void setExams(List<Exam> exams) {
         this.exams = exams;
+    }
+
+    public void addExam(Exam exam) {
+        exams.add(exam);
+    }
+
+    public void removeExam(Exam exam) {
+        Log.d("remove exams", "####################################" + exam.getId());
+        for(Exam ex: exams)
+        {
+            Log.d("removeE", " " + ex.getLecture().getName());
+        }
+        exams.remove(exam);
+
+        for(Exam ex: exams)
+        {
+            Log.d("removeE2", " " + ex.getLecture().getName());
+        }
     }
 }

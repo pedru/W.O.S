@@ -30,6 +30,7 @@ public class ExamDetailActivity extends AppCompatActivity {
     private ListView questionListView;
     private int id;
     private boolean canRememberExam;
+    private UserDetail userDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,21 +67,22 @@ public class ExamDetailActivity extends AppCompatActivity {
         });
 
         Call<UserDetail> call_subscribe = NetworkManager.getInstance().leaRestService.getMyUser();
+
+
         call_subscribe.enqueue(new Callback<UserDetail>() {
             @Override
             public void onResponse(Call<UserDetail> call_subscribe, Response<UserDetail> response) {
 
                 UserDetail userDetail = response.body();
-                Log.d("EXAMS", "RESPONSE: " + response.body().getExams());
                 exams = new ArrayList<>(userDetail.getExams());
-                //   exams = new ArrayList<>();
-                for (Exam ex : exams){
+                Log.d("set cr", "set");
+                 for (Exam ex : exams) {
                     if(ex.getId() == id){
-                        canRememberExam = true;
+                        canRememberExam = false;
                         break;
                     }
                     else {
-                        canRememberExam = false;
+                        canRememberExam = true;
                     }
                 }
             }
@@ -102,34 +104,56 @@ public class ExamDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        for(Exam ex : exams)
+        {
+            Log.d("liste ", " " + ex.getLecture().getName() + " " + ex.getId());
+        }
         switch (item.getItemId()) {
+
             case R.id.action_remember:
                 if (canRememberExam)
                 {
-                    Call<ExamSubscription> call_sub = NetworkManager.getInstance().leaRestService.rememberExam(6);
+                    Call<ExamSubscription> call_sub = NetworkManager.getInstance().leaRestService.subscribeExam(id);
                     call_sub.enqueue(new Callback<ExamSubscription>() {
                                          @Override
                                          public void onResponse(Call<ExamSubscription> call, Response<ExamSubscription> response) {
-                                             Log.d("subtag", "onresponse " + response);
+                                             Log.d("subtag", "onresponse sub" + response);
                                          }
 
                                          @Override
                                          public void onFailure(Call<ExamSubscription> call, Throwable t) {
-                                             Log.d("EXAMS", "FAIL");
+                                             Log.d("EXAMS sub", "FAIL");
                                          }
                                      }
                     );
                 }
+                else
+                {
+                    Call<ExamSubscription> call_unsub = NetworkManager.getInstance().leaRestService.unsubscribeExam(id);
+                    call_unsub.enqueue(new Callback<ExamSubscription>() {
+                                         @Override
+                                         public void onResponse(Call<ExamSubscription> call, Response<ExamSubscription> response) {
+                                             Log.d("unsubtag", "onresponse unsubscribe" + response);
+                                         }
+
+                                         @Override
+                                         public void onFailure(Call<ExamSubscription> call, Throwable t) {
+                                             Log.d("EXAMS unsubscribe", "FAIL");
+                                         }
+                                     }
+                    );
+
+                }
                 canRememberExam =! canRememberExam;
 
                 invalidateOptionsMenu();
-
-
+                for(Exam ex : exams)
+                {
+                    Log.d("liste2 act ", " " + ex.getLecture().getName() + " " + ex.getId());
+                }
                 return true;
 
             default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
 
         }
@@ -147,5 +171,17 @@ public class ExamDetailActivity extends AppCompatActivity {
         }
 
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    public boolean getCanRememberExam() {
+        return canRememberExam;
+    }
+
+    public ArrayList<Exam> getExams() {
+        return exams;
+    }
+
+    public int getId() {
+        return id;
     }
 }

@@ -39,5 +39,9 @@ public interface LeaRestService {
 
     @FormUrlEncoded
     @POST("api/exams/subscribe")
-    Call<ExamSubscription> rememberExam(@Field("exam_id") int exam_id);
+    Call<ExamSubscription> subscribeExam(@Field("exam_id") int exam_id);
+
+    @FormUrlEncoded
+    @POST("api/exams/unsubscribe")
+    Call<ExamSubscription> unsubscribeExam(@Field("exam_id") int exam_id);
 }
