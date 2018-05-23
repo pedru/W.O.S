@@ -2,7 +2,9 @@ package wos.lea.test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,16 +58,26 @@ public class LeaTestDatabase {
         exam.setQuestions(questions);
         exam.setCreated(new Date());
         exam.setLecture(lectures.get(0));
-        exam.setDate(new Date());
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2018);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 21);
+        Date date = cal.getTime();
+        exam.setDate(date);
         allExams.add(exam);
         savedExams.add(exam);
 
         exam = new ExamDetail();
         exam.setId(1);
         exam.setQuestions(questions);
+        cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2018);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 20);
+        date = cal.getTime();
         exam.setCreated(new Date());
         exam.setLecture(lectures.get(1));
-        exam.setDate(new Date());
+        exam.setDate(date);
         allExams.add(exam);
         savedExams.add(exam);
 
@@ -193,4 +205,10 @@ public class LeaTestDatabase {
         return users;
     }
 
+    public Lecture createNewExam(int id, String date) {
+        Lecture lecture = new Lecture();
+        lecture.setId(id);
+        lecture.setName("Mobile Applications");
+        return lecture;
+    }
 }
