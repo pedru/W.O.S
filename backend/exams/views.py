@@ -61,3 +61,17 @@ def subscribe(request):
     exam = get_object_or_404(Exam, pk=exam_id)
     exam.subscribed.add(request.user)
     return Response({'detail': 'Subscribed to Exam {}'.format(exam)}, 201)
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def upvote(request):
+    if '' not in request.data:
+        return Response({'detail': 'Missing parameter exam_id'}, 422)
+
+    exam_id = request.data['exam_id']
+    if not isinstance(exam_id, int):
+        return Response({'detail': 'exam_id has to be of integer type'}, 400)
+
+    exam = get_object_or_404(Exam, pk=exam_id)
+    exam.subscribed.add(request.user)
+    return Response({'detail': 'Subscribed to Exam {}'.format(exam)}, 201)
