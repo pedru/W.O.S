@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from exams.models import Exam, Question, Lecture
@@ -29,6 +30,20 @@ class ExamDetailSerializer(ExamListSerializer):
     class Meta:
         model = Exam
         fields = ExamListSerializer.Meta.fields + ('questions',)
+
+
+class ExamCreateSerializer(serializers.ModelSerializer):
+    # owner = serializers.ReadOnlyField()
+    class Meta:
+        model = Exam
+        fields = ['lecture_id', 'date', 'owner_id']
+
+    def create(self, validated_data):
+        lecture = Lecture.objects.get(pk=validated_data['lecture_id'])
+        owner_id = validated_data['owner'].id
+        created_model = self.Meta.model.objects.create(lecture=lecture, date=validated_data['date'], owner_id=owner_id)
+        created_model.save()
+        return created_model
 
 
 class LectureDetailSerializer(LectureSerializer):
