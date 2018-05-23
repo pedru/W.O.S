@@ -8,6 +8,7 @@ class LectureAdmin(admin.ModelAdmin):
 
 @admin.register(Exam)
 class ExamAdmin(admin.ModelAdmin):
+    list_display = ['id','date','lecture','question_count']
     pass
 
 @admin.register(Question)
