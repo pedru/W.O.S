@@ -21,6 +21,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import wos.lea.networking.Exam;
 import wos.lea.networking.ExamDetail;
 import wos.lea.networking.NetworkManager;
 import wos.lea.networking.Question;
@@ -49,7 +50,8 @@ public class ExamDetailActivity extends AppCompatActivity {
         questionListView.addItemDecoration(new DividerItemDecoration(this, VERTICAL));
 
         questions = new ArrayList<>();
-       final  QuestionListAdapter adapter = new QuestionListAdapter(questions);
+
+       final  QuestionListAdapter adapter = new QuestionListAdapter(questions, id);
         questionListView.setAdapter(adapter);
         Call<ExamDetail> call = NetworkManager.getInstance().getLeaRestService().getExamById(id);
 
@@ -65,6 +67,7 @@ public class ExamDetailActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.appBarExamName)).setText(examDetail.getLecture().getName());
 
                 questions.addAll(examDetail.getQuestions());
+
                 adapter.notifyDataSetChanged();
                 Log.d("EXAM DETAIL", " QUESDTIONS SIZE: " + questions.size());
             }

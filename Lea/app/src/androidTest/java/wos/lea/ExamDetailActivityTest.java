@@ -1,6 +1,7 @@
 package wos.lea;
 
 import android.support.design.widget.FloatingActionButton;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.widget.ListAdapter;
@@ -11,14 +12,18 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withHint;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.core.AllOf.allOf;
 
 @RunWith(AndroidJUnit4.class)
 public class ExamDetailActivityTest {
@@ -53,6 +58,14 @@ public class ExamDetailActivityTest {
     {
         onView(withId(R.id.add_question)).perform(click());
         onView(withId(R.id.question_text)).check(matches(withHint("Add question here...")));
+    }
+
+    @Test
+    public void viewQuestionDetailTest()
+    {
+        onView(withId(R.id.questionRecyclerView))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.display_question_text)).check(matches(withHint("Question")));
     }
 
 }

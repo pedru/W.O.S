@@ -42,11 +42,13 @@ public class LeaTestDatabase {
     private void initExams() {
         List<Question> questions = new ArrayList<>();
         Question dummyQuestion = new Question();
+        dummyQuestion.setId(0);
         dummyQuestion.setQuestion("This is the question!");
         dummyQuestion.setAnswers(Arrays.asList(new Answer(), new Answer()));
         questions.add(dummyQuestion);
 
         dummyQuestion = new Question();
+        dummyQuestion.setId(1);
         dummyQuestion.setQuestion("This is another question!");
         dummyQuestion.setAnswers(Arrays.asList(new Answer(), new Answer()));
         questions.add(dummyQuestion);

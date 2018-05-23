@@ -28,11 +28,16 @@
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".CreateNewExam" />
-        <activity android:name=".CreateQuestionActivity"
+        <activity
+            android:name=".CreateQuestionActivity"
             android:label="Add Question"
             android:parentActivityName=".ExamDetailActivity"
-            android:windowSoftInputMode="stateVisible"/>
-
+            android:windowSoftInputMode="stateVisible" />
+        <activity
+            android:name=".QuestionDetailActivity"
+            android:label="@string/title_activity_question_detail"
+            android:parentActivityName=".ExamDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
