@@ -80,6 +80,9 @@ def subscribe(request):
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def unsubscribe(request):
+    """
+    Unsubscribe from an exam.
+    """
     if 'exam_id' not in request.data:
         return Response({'detail': 'Missing parameter exam_id'}, 422)
 

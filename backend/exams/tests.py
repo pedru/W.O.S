@@ -140,9 +140,23 @@ class UnsubscribeFromExamTestCase(SubscriptionTestCase):
 
 
 
-class CreateQuestionApiTest(TestCase):
-    # TODO API: Users should be able to ask/add questions to an exam
-    pass
+class CreateQuestionApiTest(UserTestCase):
+
+    question_api_url = '/api/questions/'
+
+    def test_create_question(self):
+        exam_id = 1
+        mixer.blend(Exam, id=exam_id)
+        test_question = 'Test Question?'
+        response = self.client.post(self.question_api_url, {'exam_id': exam_id, 'question': test_question})
+        self.assertEquals(response.status_code, 201)
+
+        try:
+            created_question = Question.objects.get(question=test_question)
+            self.assertEquals(created_question.exam_id, exam_id)
+        except Question.DoesNotExist:
+            self.fail('Test question was not saved to database')
+
 
 
 class CreateAnswerApiTest(TestCase):

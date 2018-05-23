@@ -18,6 +18,8 @@ from django.urls import path, reverse_lazy
 from django.conf.urls import url, include
 from django.views.generic import RedirectView
 from rest_framework import routers
+from rest_framework.documentation import include_docs_urls
+from rest_framework_swagger.views import get_swagger_view
 
 from exams.views import ExamSearch, ExamViewSet, LectureViewSet, subscribe, unsubscribe
 from studies.views import StudyListViewSet
@@ -29,14 +31,18 @@ router.register(r'studies', StudyListViewSet)
 router.register(r'exams', ExamViewSet)
 router.register(r'lecture', LectureViewSet)
 
-
 admin.site.site_header = 'LeaBackend'
+
+
+schema_view = get_swagger_view(title='LeaRestBackend-API')
 
 urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^api/', include(router.urls)),
+    url(r'^docs/', include_docs_urls(title='Lea Rest-API', public=False)),
+    url(r'^$', schema_view),
     path('admin/', admin.site.urls),
-    url('^$', RedirectView.as_view(url=reverse_lazy('admin:index'))),
+    #url('^$', RedirectView.as_view(url=reverse_lazy('admin:index'))),
     url('^api/user/token', create_user),
     url('^api/user/detail', user_detail),
     url('^api/exams/search/(?P<needle>.+)/$', ExamSearch.as_view()),
