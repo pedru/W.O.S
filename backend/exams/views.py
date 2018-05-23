@@ -91,4 +91,4 @@ def unsubscribe(request):
 
     exam = get_object_or_404(Exam, pk=exam_id)
     exam.subscribed.remove(request.user)
-    return Response({'detail': 'Subscribed to Exam {}'.format(exam)}, 201)
+    return Response({'detail': 'Unsubscribed from Exam {}'.format(exam)}, 200)

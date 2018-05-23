@@ -19,7 +19,7 @@ from django.conf.urls import url, include
 from django.views.generic import RedirectView
 from rest_framework import routers
 
-from exams.views import ExamSearch, ExamViewSet, LectureViewSet, subscribe
+from exams.views import ExamSearch, ExamViewSet, LectureViewSet, subscribe, unsubscribe
 from studies.views import StudyListViewSet
 from users.views import create_user, user_detail
 
@@ -41,5 +41,6 @@ urlpatterns = [
     url('^api/user/detail', user_detail),
     url('^api/exams/search/(?P<needle>.+)/$', ExamSearch.as_view()),
     url('^api/user/token', create_user),
-    url('^api/exams/subscribe', subscribe)
+    url('^api/exams/subscribe', subscribe),
+    url('^api/exams/unsubscribe', unsubscribe)
 ]

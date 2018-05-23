@@ -68,7 +68,7 @@ class Answer(models.Model):
     """
     Possible answer to a question
     """
-    question = models.ForeignKey(Question,models.CASCADE, related_name='answers')
+    question = models.ForeignKey(Question, models.CASCADE, related_name='answers')
     text = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -87,7 +87,8 @@ class Rating(models.Model):
 
 
 # TODO: needs specification
-meeting_status = (('active','Active'),('canceled','Canceled'))
+meeting_status = (('active', 'Active'), ('canceled', 'Canceled'))
+
 
 class Meeting(models.Model):
     """
@@ -98,10 +99,10 @@ class Meeting(models.Model):
     date = models.DateField()
     status = models.IntegerField(choices=meeting_status)
 
+
 class MeetingAttendance(models.Model):
     """
     Stores which users will attend a meeting
     """
     meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-
