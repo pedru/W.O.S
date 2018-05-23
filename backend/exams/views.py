@@ -71,8 +71,8 @@ def upvote(request):
     question = get_object_or_404(Question, pk=question_id)
     try:
         QuestionVoting.objects.get(user=request.user, question=question)
-        return Response({'detail': '>>{}<< is already upvoted'.format(question)}, 201)
+        return Response({'detail': 'Question "{}" is already upvoted'.format(question)}, 409)
     except QuestionVoting.DoesNotExist:
-        question_vote = QuestionVoting(user=request.user, question=question, weight=1).save()
-        return Response({'detail': 'upvoted question >>{}<<'.format(question)}, 201)
+        QuestionVoting(user=request.user, question=question, weight=1).save()
+        return Response({'detail': 'Upvoted question "{}"'.format(question)}, 201)
 
