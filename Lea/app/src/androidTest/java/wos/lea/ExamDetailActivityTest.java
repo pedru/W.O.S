@@ -4,6 +4,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,8 +35,8 @@ public class ExamDetailActivityTest {
 
     @Test
     public void examListAdapterExistsTest() {
-        ListView listView = testRule.getActivity().findViewById(R.id.questionList);
-        ListAdapter adapter = listView.getAdapter();
+        RecyclerView listView = testRule.getActivity().findViewById(R.id.questionRecyclerView);
+        RecyclerView.Adapter adapter = listView.getAdapter();
         assertNotNull(adapter);
     }
 

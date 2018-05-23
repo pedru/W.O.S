@@ -6,6 +6,7 @@ import retrofit2.Call;
 import wos.lea.networking.Exam;
 import wos.lea.networking.ExamDetail;
 import wos.lea.networking.LeaRestService;
+import wos.lea.networking.Lecture;
 import wos.lea.networking.LectureDetail;
 import wos.lea.networking.Study;
 import wos.lea.networking.StudyDetail;
@@ -63,6 +64,11 @@ public class LeaTestRestService implements LeaRestService {
         response.setToken("thisisaTestToken");
         response.setUser("user@lea.com");
         return new LeaTestCall<>(response);
+    }
+    @Override
+    public Call<Lecture> createNewExam(int id, String date){
+        //TODO: implement newExams test requests
+        return null;
     }
 
 }
