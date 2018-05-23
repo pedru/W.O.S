@@ -88,6 +88,12 @@ class Rating(models.Model):
 # TODO: needs specification
 meeting_status = (('active','Active'),('canceled','Canceled'))
 
+class QuestionVoting(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE,related_name='votings')
+    date = models.DateField(auto_now=True)
+    weight = models.IntegerField(default=1, help_text="The weight of the vote, can be positive or negative.")
+
 class Meeting(models.Model):
     """
     Meeting to prepare for an exam

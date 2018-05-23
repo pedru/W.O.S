@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from exams.models import Exam, Question, Lecture
+from exams.models import Exam, Question, Lecture, QuestionVoting
 from exams.serializers import ExamListSerializer, QuestionListSerializer, LectureDetailSerializer, LectureSerializer, \
     ExamDetailSerializer
 
@@ -65,13 +65,14 @@ def subscribe(request):
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def upvote(request):
-    if '' not in request.data:
-        return Response({'detail': 'Missing parameter exam_id'}, 422)
+    if 'id' not in request.data:
+        return Response({'detail': 'Missing parameter id'}, 422)
+    question_id = request.data['id']
+    question = get_object_or_404(Question, pk=question_id)
+    try:
+        QuestionVoting.objects.get(user=request.user, question=question)
+        return Response({'detail': '>>{}<< is already upvoted'.format(question)}, 201)
+    except QuestionVoting.DoesNotExist:
+        question_vote = QuestionVoting(user=request.user, question=question, weight=1).save()
+        return Response({'detail': 'upvoted question >>{}<<'.format(question)}, 201)
 
-    exam_id = request.data['exam_id']
-    if not isinstance(exam_id, int):
-        return Response({'detail': 'exam_id has to be of integer type'}, 400)
-
-    exam = get_object_or_404(Exam, pk=exam_id)
-    exam.subscribed.add(request.user)
-    return Response({'detail': 'Subscribed to Exam {}'.format(exam)}, 201)
