@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="wos.lea.ExamDetailActivity">
+    tools:context="wos.lea.QuestionDetailActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -29,24 +28,24 @@
                     android:id="@+id/appBarExamDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/appBarExamName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="22sp"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textSize="22sp" />
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_exam_detail" />
+    <include layout="@layout/content_question_detail" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_question"
+        android:id="@+id/add_answer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

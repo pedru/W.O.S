@@ -3,21 +3,32 @@ from rest_framework import viewsets, generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+import logging
 
-from exams.models import Exam, Question, Lecture, QuestionVoting
+from exams.models import Exam, Question, Lecture
 from exams.serializers import ExamListSerializer, QuestionListSerializer, LectureDetailSerializer, LectureSerializer, \
-    ExamDetailSerializer
+    ExamDetailSerializer, ExamCreateSerializer
+
+logger = logging.getLogger(__name__)
 
 
-class ExamViewSet(viewsets.ReadOnlyModelViewSet):
+class ExamViewSet(viewsets.ModelViewSet):
     queryset = Exam.objects.all()
     serializer_class = ExamListSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
+    authentication_classes = (TokenAuthentication,)
 
     def get_serializer_class(self):
-        if (self.action == 'retrieve'):
+        print(self.action)
+        if self.action == 'retrieve':
             return ExamDetailSerializer
+        if self.action == 'create':
+            return ExamCreateSerializer
         else:
             return ExamListSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user, lecture_id=self.request.data['lecture_id'])
 
 
 class QuestionViewSet(viewsets.ModelViewSet):
@@ -55,12 +66,31 @@ def subscribe(request):
         return Response({'detail': 'Missing parameter exam_id'}, 422)
 
     exam_id = request.data['exam_id']
-    if not isinstance(exam_id, int):
+    try:
+        exam_id = int(exam_id)
+    except ValueError:
         return Response({'detail': 'exam_id has to be of integer type'}, 400)
 
     exam = get_object_or_404(Exam, pk=exam_id)
     exam.subscribed.add(request.user)
     return Response({'detail': 'Subscribed to Exam {}'.format(exam)}, 201)
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def unsubscribe(request):
+    if 'exam_id' not in request.data:
+        return Response({'detail': 'Missing parameter exam_id'}, 422)
+
+    exam_id = request.data['exam_id']
+    try:
+        exam_id = int(exam_id)
+    except ValueError:
+        return Response({'detail': 'exam_id has to be of integer type'}, 400)
+
+    exam = get_object_or_404(Exam, pk=exam_id)
+    exam.subscribed.remove(request.user)
+    return Response({'detail': 'Unsubscribed from Exam {}'.format(exam)}, 200)
+
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
@@ -75,4 +105,5 @@ def upvote(request):
     except QuestionVoting.DoesNotExist:
         QuestionVoting(user=request.user, question=question, weight=1).save()
         return Response({'detail': 'Upvoted question "{}"'.format(question)}, 201)
+
 

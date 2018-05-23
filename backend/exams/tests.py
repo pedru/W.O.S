@@ -22,7 +22,6 @@ class ExamsConfigTest(SimpleTestCase):
 
 
 class ExamTestCase(TransactionTestCase):
-
     def setUp(self):
         lecture = mixer.blend(Lecture, name="Foolecture")
         study = mixer.blend(Study, name="Foostudy")
@@ -62,12 +61,10 @@ class AnswerTestCase(SimpleTestCase):
 
 
 class CreateExamApiTest(TransactionTestCase):
-    pass
-    # TODO API: User should be able to create a new exam
+    create_url = 'api/exams/'
 
 
 class RetrieveExamListApiTest(TransactionTestCase):
-
     def setUp(self):
         self.client = APIClient()
         self.test_lecture_name = 'Softwaretechnologie'
@@ -75,7 +72,7 @@ class RetrieveExamListApiTest(TransactionTestCase):
     def test_serial(self):
         test_lecture = mixer.blend(Lecture, name=self.test_lecture_name)
         mixer.blend(Exam, lecture=test_lecture)
-        response = self.client.get("http://localhost:8000/api/exams/")
+        response = self.client.get("/api/exams/")
         self.assertEquals(len(response.data), 1)
         self.assertEquals(response.data[0]['lecture']['name'], self.test_lecture_name)
 
@@ -90,34 +87,57 @@ class SearchExamApiTest(TestCase):
     pass
 
 
-class SubscribeToExamDateApiTest(UserTestCase):
+class SubscriptionTestCase(UserTestCase):
+    subscribe_action_url = '/api/exams/subscribe'
 
     def setUp(self):
         self.user = User.objects.get(pk=1)
         self.client = APIClient()
-
-    def subscribe_to_exam(self, payload: dict = None):
-        return self.client.post('/api/exams/subscribe', payload, format='json')
-
-    def test_subscribe(self):
         self.client.force_authenticate(self.user)
 
+    def subscribe_action(self, payload: dict = None):
+        return self.client.post(self.subscribe_action_url, payload, format='json')
+
+
+class SubscribeToExamDateApiTest(SubscriptionTestCase):
+
+    def test_subscribe(self):
         # Omitting parameter
-        response = self.subscribe_to_exam()
+        response = self.subscribe_action()
         self.assertEquals(response.status_code, 422)
 
         # Wrong type of parameter
-        response = self.subscribe_to_exam({'exam_id':'foo'})
+        response = self.subscribe_action({'exam_id': 'foo'})
         self.assertEquals(response.status_code, 400)
 
         # Non-existing exam
-        response = self.subscribe_to_exam({'exam_id': 1})
+        response = self.subscribe_action({'exam_id': 1})
         self.assertEquals(response.status_code, 404)
 
         # Successful subscription
         mixer.blend(Exam, id=1)
-        response = self.subscribe_to_exam({'exam_id': 1})
+        response = self.subscribe_action({'exam_id': '1'})
         self.assertEquals(response.status_code, 201)
+
+
+class UnsubscribeFromExamTestCase(SubscriptionTestCase):
+    subscribe_action_url = '/api/exams/unsubscribe'
+
+    def test_unsubscribe(self):
+        exam = mixer.blend(Exam, id=1)
+        self.user.exams.add(exam)
+        self.assertEquals(exam.subscribed.count(), 1)
+
+        response = self.subscribe_action({'exam_id': '1'})
+        self.assertEquals(exam.subscribed.count(), 0)
+        self.assertEquals(response.status_code, 200)
+
+        response = self.subscribe_action({'exam_id': 'foo'})
+        self.assertEquals(response.status_code, 400)
+
+        response = self.subscribe_action({})
+        self.assertEquals(response.status_code, 422)
+
 
 
 class CreateQuestionApiTest(TestCase):
