@@ -1,11 +1,13 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, generics
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 import logging
 
-from exams.models import Exam, Question, Lecture
+from backend.permissions import IsOwnerOrReadOnly
+from exams.models import Exam, Question, Lecture, QuestionVoting
 from exams.serializers import ExamListSerializer, QuestionListSerializer, LectureDetailSerializer, LectureSerializer, \
     ExamDetailSerializer, ExamCreateSerializer
 
