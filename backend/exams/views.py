@@ -7,9 +7,9 @@ from rest_framework.response import Response
 import logging
 
 from backend.permissions import IsOwnerOrReadOnly
-from exams.models import Exam, Question, Lecture, QuestionVoting
+from exams.models import Exam, Question, Lecture, Answer
 from exams.serializers import ExamListSerializer, QuestionListSerializer, LectureDetailSerializer, LectureSerializer, \
-    ExamDetailSerializer, ExamCreateSerializer
+    ExamDetailSerializer, ExamCreateSerializer, AnswerListSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +35,21 @@ class ExamViewSet(viewsets.ModelViewSet):
 
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
-    serializer_class = QuestionListSerializer
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return QuestionDetailSerializer
+        elif self.action == 'create':
+            return QuestionCreateSerializer
+        else:
+            return QuestionListSerializer
+
+
+class AnswerViewSet(viewsets.ModelViewSet):
+    queryset = Answer.objects.all()
+    serializer_class = AnswerListSerializer
 
 
 class LectureViewSet(viewsets.ReadOnlyModelViewSet):
@@ -57,7 +71,6 @@ class ExamSearch(generics.ListAPIView):
         for the currently authenticated user.
         """
         needle = self.kwargs['needle']
-        print(needle)
         return Exam.objects.all()
 
 
@@ -77,9 +90,13 @@ def subscribe(request):
     exam.subscribed.add(request.user)
     return Response({'detail': 'Subscribed to Exam {}'.format(exam)}, 201)
 
+
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def unsubscribe(request):
+    """
+    Unsubscribe from an exam.
+    """
     if 'exam_id' not in request.data:
         return Response({'detail': 'Missing parameter exam_id'}, 422)
 
