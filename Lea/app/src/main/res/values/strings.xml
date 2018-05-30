@@ -10,6 +10,7 @@
     <string name="my_exams">My Exams</string>
     <string name="title_activity_exam_detail">ExamDetailActivity</string>
     <string name="questionText">questionText</string>
+    <string name="action_remember">Remember Exam</string>
     <string name="studyName">studyName</string>
     <string name="addQuestion">Add question here...</string>
     <string name="saveQuestionToast">Question submitted</string>

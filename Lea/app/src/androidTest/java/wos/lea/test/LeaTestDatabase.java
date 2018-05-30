@@ -1,5 +1,7 @@
 package wos.lea.test;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -12,6 +14,7 @@ import java.util.Map;
 import wos.lea.networking.Answer;
 import wos.lea.networking.Exam;
 import wos.lea.networking.ExamDetail;
+import wos.lea.networking.ExamSubscription;
 import wos.lea.networking.Lecture;
 import wos.lea.networking.LectureDetail;
 import wos.lea.networking.Question;
@@ -70,7 +73,7 @@ public class LeaTestDatabase {
         savedExams.add(exam);
 
         exam = new ExamDetail();
-        exam.setId(1);
+        exam.setId(2);
         exam.setQuestions(questions);
         cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2018);
@@ -207,10 +210,42 @@ public class LeaTestDatabase {
         return users;
     }
 
+    public ExamSubscription rememberExam(int exam_id)
+    {
+        ExamSubscription examSubscription = new ExamSubscription();
+        examSubscription.setExam_id(exam_id);
+        for(Exam exam : getMyUsers().getExams())
+        {
+            if(exam.getId() == exam_id)
+            {
+                return examSubscription;
+            }
+        }
+        getMyUsers().addExam(getExamById(exam_id));
+        return examSubscription;
+    }
+
+    public ExamSubscription forgetExam(int exam_id)
+    {
+        ExamSubscription examSubscription = new ExamSubscription();
+        examSubscription.setExam_id(exam_id);
+        for(Exam exam : getMyUsers().getExams())
+        {
+            if(exam.getId() == exam_id)
+            {
+                getMyUsers().removeExam(exam);
+                return examSubscription;
+            }
+        }
+
+        return examSubscription;
+    }
+
     public Lecture createNewExam(int id, String date) {
         Lecture lecture = new Lecture();
         lecture.setId(id);
         lecture.setName("Mobile Applications");
         return lecture;
     }
+
 }
