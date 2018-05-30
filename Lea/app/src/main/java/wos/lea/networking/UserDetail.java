@@ -43,16 +43,7 @@ public class UserDetail {
     }
 
     public void removeExam(Exam exam) {
-        Log.d("remove exams", "####################################" + exam.getId());
-        for(Exam ex: exams)
-        {
-            Log.d("removeE", " " + ex.getLecture().getName());
-        }
         exams.remove(exam);
 
-        for(Exam ex: exams)
-        {
-            Log.d("removeE2", " " + ex.getLecture().getName());
-        }
     }
 }

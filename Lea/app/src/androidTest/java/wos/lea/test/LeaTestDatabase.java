@@ -219,7 +219,6 @@ public class LeaTestDatabase {
         {
             if(exam.getId() == exam_id)
             {
-                Log.d("forgetE", "" + exam.getId());
                 getMyUsers().removeExam(exam);
                 return examSubscription;
             }

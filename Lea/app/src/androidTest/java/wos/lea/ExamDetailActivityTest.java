@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wos.lea.networking.Exam;
+import wos.lea.networking.NetworkManager;
 import wos.lea.test.LeaTestDatabase;
+import wos.lea.test.LeaTestRestService;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.Espresso.pressBack;
@@ -83,39 +85,26 @@ public class ExamDetailActivityTest {
     }
 
     @Test
-    public void menuRememberExam()
-    {
+    public void menuRememberUnsubscribeExamTest() {
 
-        /*
-        ArrayList<Exam> exams = testRuleMain.getActivity().getExams();
+        LeaTestRestService leaRestService = (LeaTestRestService) NetworkManager.getInstance().getLeaRestService();
+        LeaTestDatabase test_database = leaRestService.getLeaTestDatabase();
+        List<Exam> exams = test_database.getMyUsers().getExams();
 
-        for(Exam ex : exams)
-        {
-            Log.d("liste ", " " + ex.getLecture().getName() + " " + ex.getId());
-        }
-*/      //ArrayList<Exam> exams = testRule.getActivity().getExams();
-
-        LeaTestDatabase testd = new LeaTestDatabase();
-        List<Exam> exams = testd.getMyUsers().getExams();
-        for(Exam ex : exams)
-        {
-            Log.d("liste test ", " " + ex.getLecture().getName() + " " + ex.getId());
-        }
+        int original_exams_size = exams.size();
+        int id_current_exam = testRule.getActivity().getId();
+        boolean exam_not_found = true;
 
         onView(withId(R.id.action_remember)).perform(click());
 
-        List<Exam> exams2 = testd.getMyUsers().getExams();
-        //testd.getMyUsers().removeExam(testd.getExamById(1));
+        exams = test_database.getMyUsers().getExams();
+        int new_exams_size = exams.size();
 
-        for(Exam ex : exams2)
-        {
-            Log.d("liste2 test2 ", " " + ex.getLecture().getName() + " " + ex.getId() + testd.getMyUsers().getUsername());
+        for (Exam ex : exams) {
+            if(ex.getId() == id_current_exam) {
+                exam_not_found = false;
+            }
         }
-
+        assertTrue((new_exams_size)==(original_exams_size-1) && (exam_not_found));
     }
-
-
-
-
-
 }

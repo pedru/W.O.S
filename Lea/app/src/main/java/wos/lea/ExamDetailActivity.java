@@ -75,7 +75,6 @@ public class ExamDetailActivity extends AppCompatActivity {
 
                 UserDetail userDetail = response.body();
                 exams = new ArrayList<>(userDetail.getExams());
-                Log.d("set cr", "set");
                  for (Exam ex : exams) {
                     if(ex.getId() == id){
                         canRememberExam = false;
@@ -104,10 +103,6 @@ public class ExamDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        for(Exam ex : exams)
-        {
-            Log.d("liste ", " " + ex.getLecture().getName() + " " + ex.getId());
-        }
         switch (item.getItemId()) {
 
             case R.id.action_remember:
@@ -147,10 +142,6 @@ public class ExamDetailActivity extends AppCompatActivity {
                 canRememberExam =! canRememberExam;
 
                 invalidateOptionsMenu();
-                for(Exam ex : exams)
-                {
-                    Log.d("liste2 act ", " " + ex.getLecture().getName() + " " + ex.getId());
-                }
                 return true;
 
             default:

@@ -24,6 +24,9 @@ public class LeaTestRestService implements LeaRestService {
         leaTestDatabase = new LeaTestDatabase();
     }
 
+    public LeaTestDatabase getLeaTestDatabase() {
+        return leaTestDatabase;
+    }
 
     @Override
     public Call<List<Exam>> listAllExams() {
@@ -78,7 +81,6 @@ public class LeaTestRestService implements LeaRestService {
     @Override
     public Call<ExamSubscription> unsubscribeExam(@Field("exam_id") int exam_id) {
         ExamSubscription response = leaTestDatabase.forgetExam(exam_id);
-        Log.d("unsub", "forget exam");
         return new LeaTestCall<>(response);
     }
 
