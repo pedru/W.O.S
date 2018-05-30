@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -15,18 +17,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import wos.lea.networking.Answer;
 import wos.lea.networking.ExamDetail;
 import wos.lea.networking.NetworkManager;
 import wos.lea.networking.Question;
 
+import static android.widget.LinearLayout.VERTICAL;
+
 public class QuestionDetailActivity extends AppCompatActivity {
 
     private Menu menu;
+    private RecyclerView answerList;
+    private List<Answer> answers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +43,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final ActionBar ab = getSupportActionBar();
+        ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
 
@@ -43,8 +51,17 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
         int examId = getIntent().getIntExtra("examId", 1);
         final int questionId = getIntent().getIntExtra("questionId", 1);
-        Call<ExamDetail> call = NetworkManager.getInstance().getLeaRestService().getExamById(examId);
 
+        answerList = findViewById(R.id.QuestionAnswerRecyclerView);
+
+        answerList.addItemDecoration(new DividerItemDecoration(this, VERTICAL));
+
+        answers = new ArrayList<>();
+        final AnswerListAdapter adapter = new AnswerListAdapter(answers);
+        answerList.setAdapter(adapter);
+
+
+        Call<ExamDetail> call = NetworkManager.getInstance().getLeaRestService().getExamById(examId);
 
 
         call.enqueue(new Callback<ExamDetail>() {
@@ -57,7 +74,21 @@ public class QuestionDetailActivity extends AppCompatActivity {
                 ((TextView) findViewById(R.id.appBarExamName)).setText(examDetail.getLecture().getName());
                 display_question_text.setText(searchQuestionByID(examDetail.getQuestions(),questionId).getQuestion());
 
+                List<Answer> answers_new = searchQuestionByID(examDetail.getQuestions(),questionId).getAnswers();
+
+                if(!answers_new.isEmpty())
+                {
+                    answers.addAll(answers_new);
+                    Log.d("Answer", "ANSWER: " + answers.get(0).getText());
+
+                    adapter.notifyDataSetChanged();
+                }
+
+
+
+
             }
+
 
             @Override
             public void onFailure(Call<ExamDetail> call, Throwable t) {
@@ -90,6 +121,13 @@ public class QuestionDetailActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void updateAnswerList()
+    {
+
+    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -114,6 +152,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
 
         int id = item.getItemId();
+        final int questionId = getIntent().getIntExtra("questionId", 1);
 
         if (id == R.id.save_answer)
         {
@@ -123,8 +162,23 @@ public class QuestionDetailActivity extends AppCompatActivity {
                 //TODO backend stuff
                 Toast toast = Toast.makeText(QuestionDetailActivity.this, R.string.answerTextEmpty, Toast.LENGTH_LONG);
                 toast.show();
+
             }
             else {
+                Call<Void> call = NetworkManager.getInstance().getLeaRestService().createNewAnswer(questionId,editText.getText().toString());
+                call.enqueue(new Callback<Void>() {
+                                 @Override
+                                 public void onResponse(Call<Void> call, Response<Void> response) {
+                                     Log.d("subtag", "onresponse " + response);
+                                 }
+
+                                 @Override
+                                 public void onFailure(Call<Void> call, Throwable t) {
+                                     Log.d("EXAMS", "FAIL");
+                                 }
+                             }
+                );
+
                 Toast toast = Toast.makeText(QuestionDetailActivity.this, R.string.answerSaved, Toast.LENGTH_LONG);
                 toast.show();
             }

@@ -65,30 +65,9 @@ public class ExamDetailActivity extends AppCompatActivity {
 
        final  QuestionListAdapter adapter = new QuestionListAdapter(questions, id);
         questionListView.setAdapter(adapter);
-        Call<ExamDetail> call = NetworkManager.getInstance().getLeaRestService().getExamById(id);
 
+        updateQuestionList(adapter);
 
-
-        call.enqueue(new Callback<ExamDetail>() {
-            @Override
-            public void onResponse(Call<ExamDetail> call, Response<ExamDetail> response) {
-                examDetail = response.body();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
-                String examDate = simpleDateFormat.format(examDetail.getDate());
-                ((TextView) findViewById(R.id.appBarExamDate)).setText(examDate);
-                ((TextView) findViewById(R.id.appBarExamName)).setText(examDetail.getLecture().getName());
-
-                questions.addAll(examDetail.getQuestions());
-
-                adapter.notifyDataSetChanged();
-                Log.d("EXAM DETAIL", " QUESDTIONS SIZE: " + questions.size());
-            }
-
-            @Override
-            public void onFailure(Call<ExamDetail> call, Throwable t) {
-                Log.d("EXAMS", "FAIL");
-            }
-        });
         FloatingActionButton fab = findViewById(R.id.add_question);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,6 +110,34 @@ public class ExamDetailActivity extends AppCompatActivity {
         });
 
     }
+
+
+    private void updateQuestionList(final QuestionListAdapter adapter)
+    {
+        Call<ExamDetail> call = NetworkManager.getInstance().getLeaRestService().getExamById(id);
+        call.enqueue(new Callback<ExamDetail>() {
+            @Override
+            public void onResponse(Call<ExamDetail> call, Response<ExamDetail> response) {
+                examDetail = response.body();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+                String examDate = simpleDateFormat.format(examDetail.getDate());
+                ((TextView) findViewById(R.id.appBarExamDate)).setText(examDate);
+                ((TextView) findViewById(R.id.appBarExamName)).setText(examDetail.getLecture().getName());
+
+                questions.addAll(examDetail.getQuestions());
+
+                adapter.notifyDataSetChanged();
+                Log.d("EXAM DETAIL", " QUESDTIONS SIZE: " + questions.size());
+            }
+
+            @Override
+            public void onFailure(Call<ExamDetail> call, Throwable t) {
+                Log.d("EXAMS", "FAIL");
+            }
+        });
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

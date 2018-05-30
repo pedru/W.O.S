@@ -48,7 +48,17 @@ public interface LeaRestService {
     Call<ExamSubscription> unsubscribeExam(@Field("exam_id") int exam_id);
 
     @FormUrlEncoded
-    @POST("api/exams/")
+    @POST("api/exams")
     Call<Lecture> createNewExam(@Field("lecture_id") int id,
                                 @Field("date") String date);
+
+    @FormUrlEncoded
+    @POST("api/questions")
+    Call<Void> createNewQuestion(@Field("exam_id") int exam_id,
+                                @Field("question") String question);
+
+    @FormUrlEncoded
+    @POST("api/answers")
+    Call<Void> createNewAnswer(@Field("question_id") int question_id,
+                                 @Field("answer") String answer);
 }

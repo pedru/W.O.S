@@ -5,13 +5,13 @@ package wos.lea.networking;
  */
 
 public class Answer {
-    private String answerText;
+    private String text;
 
-    public String getAnswerText() {
-        return answerText;
+    public String getText() {
+        return text;
     }
 
-    public void setAnswerText(String answerText) {
-        this.answerText = answerText;
+    public void setText(String text) {
+        this.text = text;
     }
 }
