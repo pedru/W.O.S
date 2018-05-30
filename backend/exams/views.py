@@ -7,9 +7,9 @@ from rest_framework.response import Response
 import logging
 
 from backend.permissions import IsOwnerOrReadOnly
-from exams.models import Exam, Question, Lecture
+from exams.models import Exam, Question, Lecture, Answer
 from exams.serializers import ExamListSerializer, QuestionListSerializer, LectureDetailSerializer, LectureSerializer, \
-    ExamDetailSerializer, ExamCreateSerializer
+    ExamDetailSerializer, ExamCreateSerializer, AnswerListSerializer
 
 logger = logging.getLogger(__name__)
 
