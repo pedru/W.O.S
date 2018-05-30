@@ -1,13 +1,40 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from exams.models import Exam, Question, Lecture
+from exams.models import Exam, Question, Lecture, Answer
+
+
+class AnswerListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = ('text', 'owner')
 
 
 class QuestionListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ('id', 'question', 'user')
+        fields = ['id', 'question', 'user']
+
+
+class QuestionDetailSerializer(QuestionListSerializer):
+    answers = AnswerListSerializer(many=True)
+
+    class Meta:
+        fields = QuestionListSerializer.Meta.fields + ['answers',]
+
+
+class QuestionCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = ['exam_id', 'question', 'user']
+
+    def create(self, validated_data):
+        user_id = validated_data['user_id']
+        question = validated_data['question']
+        exam = Exam.objects.get(pk=validated_data['exam_id'])
+        created_model = self.Meta.model.objects.create(exam=exam, question=question, user_id=user_id)
+        created_model.save()
+        return created_model
 
 
 class LectureSerializer(serializers.ModelSerializer):

@@ -7,9 +7,9 @@ from rest_framework.response import Response
 import logging
 
 from backend.permissions import IsOwnerOrReadOnly
-from exams.models import Exam, Question, Lecture
+from exams.models import Exam, Question, Lecture, Answer
 from exams.serializers import ExamListSerializer, QuestionListSerializer, LectureDetailSerializer, LectureSerializer, \
-    ExamDetailSerializer, ExamCreateSerializer
+    ExamDetailSerializer, ExamCreateSerializer, AnswerListSerializer, QuestionDetailSerializer, QuestionCreateSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +35,21 @@ class ExamViewSet(viewsets.ModelViewSet):
 
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
-    serializer_class = QuestionListSerializer
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return QuestionDetailSerializer
+        elif self.action == 'create':
+            return QuestionCreateSerializer
+        else:
+            return QuestionListSerializer
+
+
+class AnswerViewSet(viewsets.ModelViewSet):
+    queryset = Answer.objects.all()
+    serializer_class = AnswerListSerializer
 
 
 class LectureViewSet(viewsets.ReadOnlyModelViewSet):
@@ -76,6 +90,7 @@ def subscribe(request):
     exam = get_object_or_404(Exam, pk=exam_id)
     exam.subscribed.add(request.user)
     return Response({'detail': 'Subscribed to Exam {}'.format(exam)}, 201)
+
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
