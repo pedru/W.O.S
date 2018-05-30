@@ -7,9 +7,9 @@ from rest_framework.response import Response
 import logging
 
 from backend.permissions import IsOwnerOrReadOnly
-from exams.models import Exam, Question, Lecture, Answer
+from exams.models import Exam, Question, Lecture
 from exams.serializers import ExamListSerializer, QuestionListSerializer, LectureDetailSerializer, LectureSerializer, \
-    ExamDetailSerializer, ExamCreateSerializer, AnswerListSerializer, QuestionDetailSerializer, QuestionCreateSerializer
+    ExamDetailSerializer, ExamCreateSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +21,7 @@ class ExamViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
 
     def get_serializer_class(self):
+        print(self.action)
         if self.action == 'retrieve':
             return ExamDetailSerializer
         if self.action == 'create':
@@ -108,3 +109,20 @@ def unsubscribe(request):
     exam = get_object_or_404(Exam, pk=exam_id)
     exam.subscribed.remove(request.user)
     return Response({'detail': 'Unsubscribed from Exam {}'.format(exam)}, 200)
+
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def upvote(request):
+    if 'id' not in request.data:
+        return Response({'detail': 'Missing parameter id'}, 422)
+    question_id = request.data['id']
+    question = get_object_or_404(Question, pk=question_id)
+    try:
+        QuestionVoting.objects.get(user=request.user, question=question)
+        return Response({'detail': 'Question "{}" is already upvoted'.format(question)}, 409)
+    except QuestionVoting.DoesNotExist:
+        QuestionVoting(user=request.user, question=question, weight=1).save()
+        return Response({'detail': 'Upvoted question "{}"'.format(question)}, 201)
+
+

@@ -253,3 +253,25 @@ class RateQuestionApiTest(TestCase):
 class RateAnswerApiTest(TestCase):
     # TODO API: Users are able to rate answers
     pass
+
+class UpvoteQuestionApiTest(UserTestCase):
+    upvote_url = '/api/question/upvote'
+    def setUp(self):
+        self.user = User.objects.get(pk=1)
+        self.client = APIClient()
+        self.client.force_authenticate(self.user)
+
+    def test_upvote(self):
+        mixer.blend(Question, id=1)
+        response = self.client.post(self.upvote_url,{'id':1})
+        self.assertEqual(response.status_code, 201)
+        response = self.client.post(self.upvote_url, {'id': 1})
+        self.assertEqual(response.status_code, 409)
+        response = self.client.post(self.upvote_url,{'id_exam':1})
+        self.assertEqual(response.status_code, 422)
+        response = self.client.post(self.upvote_url,{'id':2})
+        self.assertEqual(response.status_code, 404)
+        response = self.client.post(self.upvote_url, {})
+        self.assertEqual(response.status_code, 422)
+
+

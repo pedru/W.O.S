@@ -21,6 +21,7 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,7 @@ public class SearchExamActivity extends AppCompatActivity {
     private Map<String, Lecture> lectureMap;
     private LectureDetail lecture;
     private ArrayList<Exam> exams;
+    private ArrayList<Exam> examsOnlyDate;
     private Snackbar snackbar;
 
 
@@ -78,6 +80,42 @@ public class SearchExamActivity extends AppCompatActivity {
                         String dateString = dateFormat.format(c.getTime());
 
                         examDate.setText(dateString);
+                        try {
+                            Date date_ = new Date(2018,1,1);
+                            examsOnlyDate = new ArrayList<>();
+                            for(Exam exam:exams){
+                                date_ = exam.getDate();
+                                String dateString1 = dateFormat.format(date_);
+                                if(dateString1.equals(dateString)){
+                                    examsOnlyDate.add(exam);
+                                }
+                            }
+
+                            if(!examsOnlyDate.isEmpty()) {
+                                findViewById(R.id.noExamsText).setVisibility(TextView.INVISIBLE);
+                                findViewById(R.id.ExamView).setVisibility(TextView.VISIBLE);
+                                ExamListAdapter adapter = new ExamListAdapter(SearchExamActivity.this, examsOnlyDate);
+                                examList.setAdapter(adapter);
+                                hideSnackbar(snackbar);
+                            }
+                            else {
+                                findViewById(R.id.noExamsText).setVisibility(TextView.VISIBLE);
+                                findViewById(R.id.ExamView).setVisibility(TextView.INVISIBLE);
+
+                                showSnackbar(snackbar);
+                            }
+
+
+                            if (exams.isEmpty()) {
+                                findViewById(R.id.noExamsText).setVisibility(TextView.VISIBLE);
+                                findViewById(R.id.ExamView).setVisibility(TextView.INVISIBLE);
+
+                                showSnackbar(snackbar);
+                            }
+                        }
+                        catch (NullPointerException e)  {
+                            Log.e("EXEPTION","Exam not defined!");
+                        }
                     }
                 }, y, m, d);
                 pickerDialog.show();
@@ -117,9 +155,6 @@ public class SearchExamActivity extends AppCompatActivity {
                 ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(SearchExamActivity.this,R.layout.spinner_item, categories);
 
 
-
-
-
                 dataAdapter.setDropDownViewResource(R.layout.spinner_item_list);
                 studyProgramSpinner.setAdapter(dataAdapter);
                // studyProgramSpinner.setSelection(dataAdapter.getCount());
@@ -137,6 +172,7 @@ public class SearchExamActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
+
                 final String study = studyProgramSpinner.getSelectedItem().toString();
                 //Toast.makeText(getApplicationContext(), "Selected : " + msupplier, Toast.LENGTH_SHORT).show();
                 Integer study_id = studiesMap.get(study).getId();
@@ -181,41 +217,8 @@ public class SearchExamActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
-                String lecture_name = courseSpinner.getSelectedItem().toString();
-                //Toast.makeText(getApplicationContext(), "Selected : " + lecture_name, Toast.LENGTH_SHORT).show();
-                final Integer lecture_id = lectureMap.get(lecture_name).getId();
-                Call<LectureDetail> call = NetworkManager.getInstance().getLeaRestService().getLectureById(lecture_id);
 
-                call.enqueue(new Callback<LectureDetail>() {
-                    @Override
-                    public void onResponse(Call<LectureDetail> call, Response<LectureDetail> response) {
-                        Response<LectureDetail> res = response;
-                        Object body = response.body();
-                        lecture = response.body();
-                        exams = new ArrayList<>();
-                        exams = new ArrayList<>(lecture.getExams());
-                        if (exams.isEmpty()){
-                            findViewById(R.id.noExamsText).setVisibility(TextView.VISIBLE);
-                            findViewById(R.id.ExamView).setVisibility(TextView.INVISIBLE);
-
-                            showSnackbar(snackbar);
-                        }
-                        else {
-                            findViewById(R.id.noExamsText).setVisibility(TextView.INVISIBLE);
-                            findViewById(R.id.ExamView).setVisibility(TextView.VISIBLE);
-                            //findViewById(R.id.createNewExam).setVisibility(TextView.INVISIBLE);
-                            ExamListAdapter adapter = new ExamListAdapter(SearchExamActivity.this, exams);
-                            examList.setAdapter(adapter);
-                            hideSnackbar(snackbar);
-
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<LectureDetail> call, Throwable t) {
-                        Log.d("EXAMS", "FAIL");
-                    }
-                });
+                updateList();
 
             }
 
@@ -226,16 +229,55 @@ public class SearchExamActivity extends AppCompatActivity {
             }
         });
     }
-    public void showSnackbar(Snackbar snackbar)
+    public void showSnackbar(final Snackbar snackbar)
     {
-
-        // Set an action on it, and a handler
         snackbar.setAction("CREATE", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //snackbar.dismiss();
-                Intent intent = new Intent(SearchExamActivity.this, CreateNewExam.class);
-                startActivity(intent);
+                String date = examDate.getText().toString();
+                if(date.equals("")){
+                    Context context = getApplicationContext();
+                    CharSequence text = "You have to select a date!";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
+                else{
+                    snackbar.dismiss();
+                    // prepare
+                    String lecture_name = courseSpinner.getSelectedItem().toString();
+                    final Integer lecture_id = lectureMap.get(lecture_name).getId();
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    dateFormat.setTimeZone(selectedDate.getTimeZone());
+                    String date_string = dateFormat.format(selectedDate.getTime());
+                    Log.d("VERBOSE", date_string);
+
+                    Call<Lecture> call = NetworkManager.getInstance().getLeaRestService().createNewExam(lecture_id,date_string);
+                    call.enqueue(new Callback<Lecture>() {
+                                         @Override
+                                         public void onResponse(Call<Lecture> call, Response<Lecture> response) {
+                                             Log.d("subtag", "onresponse " + response);
+                                         }
+
+                                         @Override
+                                         public void onFailure(Call<Lecture> call, Throwable t) {
+                                             Log.d("EXAMS", "FAIL");
+                                         }
+                                     }
+                    );
+                    updateList();
+
+
+                    Context context = getApplicationContext();
+                    CharSequence text = "Exam was created!";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
+
             }
         });
         snackbar.show();
@@ -243,5 +285,41 @@ public class SearchExamActivity extends AppCompatActivity {
 
     public void hideSnackbar(Snackbar snackbar){
         snackbar.dismiss();
+    }
+    public void updateList() {
+        String lecture_name = courseSpinner.getSelectedItem().toString();
+        final Integer lecture_id = lectureMap.get(lecture_name).getId();
+        Call<LectureDetail> call = NetworkManager.getInstance().getLeaRestService().getLectureById(lecture_id);
+
+        call.enqueue(new Callback<LectureDetail>() {
+            @Override
+            public void onResponse(Call<LectureDetail> call, Response<LectureDetail> response) {
+                Response<LectureDetail> res = response;
+                Object body = response.body();
+                lecture = response.body();
+                exams = new ArrayList<>();
+                exams = new ArrayList<>(lecture.getExams());
+                if (exams.isEmpty()){
+                    findViewById(R.id.noExamsText).setVisibility(TextView.VISIBLE);
+                    findViewById(R.id.ExamView).setVisibility(TextView.INVISIBLE);
+
+                    showSnackbar(snackbar);
+                }
+                else {
+                    findViewById(R.id.noExamsText).setVisibility(TextView.INVISIBLE);
+                    findViewById(R.id.ExamView).setVisibility(TextView.VISIBLE);
+                    ExamListAdapter adapter = new ExamListAdapter(SearchExamActivity.this, exams);
+                    examList.setAdapter(adapter);
+                    hideSnackbar(snackbar);
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LectureDetail> call, Throwable t) {
+                Log.d("EXAMS", "FAIL");
+            }
+        });
+
     }
 }

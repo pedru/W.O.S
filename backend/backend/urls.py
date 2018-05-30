@@ -21,7 +21,7 @@ from rest_framework import routers
 from rest_framework.documentation import include_docs_urls
 from rest_framework_swagger.views import get_swagger_view
 
-from exams.views import ExamSearch, ExamViewSet, LectureViewSet, subscribe, unsubscribe, AnswerViewSet, QuestionViewSet
+from exams.views import ExamSearch, ExamViewSet, LectureViewSet, subscribe, unsubscribe, upvote, AnswerViewSet, QuestionViewSet
 from studies.views import StudyListViewSet
 from users.views import create_user, user_detail
 
@@ -30,13 +30,9 @@ router.register(r'exams', ExamViewSet)
 router.register(r'studies', StudyListViewSet)
 router.register(r'exams', ExamViewSet)
 router.register(r'lecture', LectureViewSet)
-router.register(r'questions', QuestionViewSet)
-router.register(r'answers', AnswerViewSet)
+
 
 admin.site.site_header = 'LeaBackend'
-
-
-schema_view = get_swagger_view(title='LeaRestBackend-API')
 
 urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls')),
@@ -50,5 +46,6 @@ urlpatterns = [
     url('^api/exams/search/(?P<needle>.+)/$', ExamSearch.as_view()),
     url('^api/user/token', create_user),
     url('^api/exams/subscribe', subscribe),
-    url('^api/exams/unsubscribe', unsubscribe)
+    url('^api/exams/unsubscribe', unsubscribe),
+    url('^api/question/upvote', upvote)
 ]
