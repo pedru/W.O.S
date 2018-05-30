@@ -17,8 +17,8 @@ class UserTestCase(TransactionTestCase):
 
 class ExamsConfigTest(SimpleTestCase):
     def test_apps(self):
-        self.assertEqual(ExamsConfig.name, 'exams')
-        self.assertEqual(apps.get_app_config('exams').name, 'exams')
+        self.assertEquals(ExamsConfig.name, 'exams')
+        self.assertEquals(apps.get_app_config('exams').name, 'exams')
 
 
 class ExamTestCase(TransactionTestCase):

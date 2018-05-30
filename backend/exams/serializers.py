@@ -11,9 +11,11 @@ class AnswerListSerializer(serializers.ModelSerializer):
 
 
 class QuestionListSerializer(serializers.ModelSerializer):
+    answers = AnswerListSerializer(many=True)
+
     class Meta:
         model = Question
-        fields = ['id', 'question', 'user']
+        fields = ['id', 'question', 'user', 'answers']
 
 
 class QuestionDetailSerializer(QuestionListSerializer):

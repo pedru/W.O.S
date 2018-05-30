@@ -21,7 +21,6 @@ class ExamViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
 
     def get_serializer_class(self):
-        print(self.action)
         if self.action == 'retrieve':
             return ExamDetailSerializer
         if self.action == 'create':
@@ -71,7 +70,6 @@ class ExamSearch(generics.ListAPIView):
         for the currently authenticated user.
         """
         needle = self.kwargs['needle']
-        print(needle)
         return Exam.objects.all()
 
 
