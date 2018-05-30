@@ -81,47 +81,16 @@ public class SearchExamTest {
 
     @Test
     public void SpinnerTest() {
-        //todo
         onView(withId(R.id.studyProgramSpinner)).perform(click());
         onData(anything()).atPosition(0).perform(click());
-        //onView(withId(R.id.studyProgramSpinner)).check(matches(withSpinnerText(containsString("Business Services"))));
+        onView(withId(R.id.studyProgramSpinner)).check(matches(withSpinnerText(containsString("Computer Science"))));
 
         onView(withId(R.id.courseSpinner)).perform(click());
         onData(anything()).atPosition(0).perform(click());
-        //onView(withId(R.id.courseSpinner)).check(matches(withSpinnerText(containsString("Computers"))));
+        onView(withId(R.id.courseSpinner)).check(matches(withSpinnerText(containsString("Mobile Applications"))));
     }
 
-    @Test
-    public void ShowExamTest(){
 
-        //fill spinner
-        onView(withId(R.id.studyProgramSpinner)).perform(click());
-        onData(anything()).atPosition(0).perform(click());
-        onView(withId(R.id.courseSpinner)).perform(click());
-        onData(anything()).atPosition(0).perform(click());
-        onView(withId(R.id.examDate)).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).check(matches(isDisplayed()));
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2018, 8, 25));
-        onView(withText("OK")).perform(click());
-
-        //check ui
-
-        ListView listView = testRule.getActivity().findViewById(R.id.ExamView);
-        assertNotNull(listView);
-        ArrayList <View> w = new ArrayList<>();
-        for (int i = 0; i < listView.getCount(); i++){
-            w.add(listView.getChildAt(i));
-        }
-
-        //click on exam
-        View v = listView.getChildAt(0);
-        TextView name = v.findViewById(R.id.name);
-        String text = (String) name.getText();
-        onData(anything()).inAdapterView(allOf(withId(R.id.ExamView),
-                isCompletelyDisplayed())).atPosition(0).perform(click());
-
-        intended(hasComponent(ExamDetailActivity.class.getName()));
-    }
     @Test
     public void noExamsFoundSnackbar(){
         //fill spinner
@@ -168,7 +137,6 @@ public class SearchExamTest {
 
     @Test
     public void createExamNoDate(){
-        //todo
         SearchExamActivity activity = testRule.getActivity();
 
         //fill spinner
@@ -188,5 +156,51 @@ public class SearchExamTest {
         onView(withText("You have to select a date!")).inRoot(withDecorView(not(is(activity.getWindow().getDecorView())))).check(matches(isDisplayed()));
     }
 
+    @Test
+    public void showExamOnlyOneDate(){
+        onView(withId(R.id.studyProgramSpinner)).perform(click());
+        onData(anything()).atPosition(0).perform(click());
+        onView(withId(R.id.courseSpinner)).perform(click());
+        onData(anything()).atPosition(0).perform(click());
+        onView(withId(R.id.examDate)).perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).check(matches(isDisplayed()));
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(2018, 1, 21));
+        onView(withText("OK")).perform(click());
 
+        ListView listView = testRule.getActivity().findViewById(R.id.ExamView);
+        assertNotNull(listView);
+        ArrayList <View> w = new ArrayList<>();
+        for (int i = 0; i < listView.getCount(); i++){
+            w.add(listView.getChildAt(i));
+        }
+        Assert.assertEquals(w.size(), 1);
+    }
+
+    @Test
+    public void ShowExamTest(){
+
+        //fill spinner
+        onView(withId(R.id.studyProgramSpinner)).perform(click());
+        onData(anything()).atPosition(0).perform(click());
+        onView(withId(R.id.courseSpinner)).perform(click());
+        onData(anything()).atPosition(0).perform(click());
+
+        //check ui
+
+        ListView listView = testRule.getActivity().findViewById(R.id.ExamView);
+        assertNotNull(listView);
+        ArrayList <View> w = new ArrayList<>();
+        for (int i = 0; i < listView.getCount(); i++){
+            w.add(listView.getChildAt(i));
+        }
+
+        //click on exam
+        View v = listView.getChildAt(0);
+        TextView name = v.findViewById(R.id.name);
+        String text = (String) name.getText();
+        onData(anything()).inAdapterView(allOf(withId(R.id.ExamView),
+                isCompletelyDisplayed())).atPosition(0).perform(click());
+
+        intended(hasComponent(ExamDetailActivity.class.getName()));
+    }
 }

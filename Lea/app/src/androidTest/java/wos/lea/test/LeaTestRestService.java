@@ -67,8 +67,8 @@ public class LeaTestRestService implements LeaRestService {
     }
     @Override
     public Call<Lecture> createNewExam(int id, String date){
-        //TODO: implement newExams test requests
-        return null;
+        Lecture detail = leaTestDatabase.createNewExam(id, date);
+        return new LeaTestCall<>(detail);
     }
 
 }
