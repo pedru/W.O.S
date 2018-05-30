@@ -67,9 +67,6 @@ public class MainActivity extends AppCompatActivity
 
         Call<UserDetail> call = NetworkManager.getInstance().leaRestService.getMyUser();
 
-        
-
-
         call.enqueue(new Callback<UserDetail>() {
             @Override
             public void onResponse(Call<UserDetail> call, Response<UserDetail> response) {

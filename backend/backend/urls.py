@@ -18,8 +18,10 @@ from django.urls import path, reverse_lazy
 from django.conf.urls import url, include
 from django.views.generic import RedirectView
 from rest_framework import routers
+from rest_framework.documentation import include_docs_urls
+from rest_framework_swagger.views import get_swagger_view
 
-from exams.views import ExamSearch, ExamViewSet, LectureViewSet, subscribe, unsubscribe,upvote
+from exams.views import ExamSearch, ExamViewSet, LectureViewSet, subscribe, unsubscribe, upvote, AnswerViewSet, QuestionViewSet
 from studies.views import StudyListViewSet
 from users.views import create_user, user_detail
 
@@ -35,8 +37,10 @@ admin.site.site_header = 'LeaBackend'
 urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^api/', include(router.urls)),
+    url(r'^docs/', include_docs_urls(title='Lea Rest-API', public=False)),
+    url(r'^$', schema_view),
     path('admin/', admin.site.urls),
-    url('^$', RedirectView.as_view(url=reverse_lazy('admin:index'))),
+    #url('^$', RedirectView.as_view(url=reverse_lazy('admin:index'))),
     url('^api/user/token', create_user),
     url('^api/user/detail', user_detail),
     url('^api/exams/search/(?P<needle>.+)/$', ExamSearch.as_view()),
@@ -44,5 +48,4 @@ urlpatterns = [
     url('^api/exams/subscribe', subscribe),
     url('^api/exams/unsubscribe', unsubscribe),
     url('^api/question/upvote', upvote)
-
 ]

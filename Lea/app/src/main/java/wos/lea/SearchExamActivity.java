@@ -21,6 +21,7 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,7 @@ public class SearchExamActivity extends AppCompatActivity {
     private Map<String, Lecture> lectureMap;
     private LectureDetail lecture;
     private ArrayList<Exam> exams;
+    private ArrayList<Exam> examsOnlyDate;
     private Snackbar snackbar;
 
 
@@ -78,8 +80,32 @@ public class SearchExamActivity extends AppCompatActivity {
                         String dateString = dateFormat.format(c.getTime());
 
                         examDate.setText(dateString);
-
                         try {
+                            Date date_ = new Date(2018,1,1);
+                            examsOnlyDate = new ArrayList<>();
+                            for(Exam exam:exams){
+                                date_ = exam.getDate();
+                                String dateString1 = dateFormat.format(date_);
+                                if(dateString1.equals(dateString)){
+                                    examsOnlyDate.add(exam);
+                                }
+                            }
+
+                            if(!examsOnlyDate.isEmpty()) {
+                                findViewById(R.id.noExamsText).setVisibility(TextView.INVISIBLE);
+                                findViewById(R.id.ExamView).setVisibility(TextView.VISIBLE);
+                                ExamListAdapter adapter = new ExamListAdapter(SearchExamActivity.this, examsOnlyDate);
+                                examList.setAdapter(adapter);
+                                hideSnackbar(snackbar);
+                            }
+                            else {
+                                findViewById(R.id.noExamsText).setVisibility(TextView.VISIBLE);
+                                findViewById(R.id.ExamView).setVisibility(TextView.INVISIBLE);
+
+                                showSnackbar(snackbar);
+                            }
+
+
                             if (exams.isEmpty()) {
                                 findViewById(R.id.noExamsText).setVisibility(TextView.VISIBLE);
                                 findViewById(R.id.ExamView).setVisibility(TextView.INVISIBLE);

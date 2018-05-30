@@ -3,6 +3,9 @@ package wos.lea.networking;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -37,11 +40,15 @@ public interface LeaRestService {
     Call<TokenResponse> getAuthToken();
 
     @FormUrlEncoded
+    @POST("api/exams/subscribe")
+    Call<ExamSubscription> subscribeExam(@Field("exam_id") int exam_id);
+
+    @FormUrlEncoded
+    @POST("api/exams/unsubscribe")
+    Call<ExamSubscription> unsubscribeExam(@Field("exam_id") int exam_id);
+
+    @FormUrlEncoded
     @POST("api/exams/")
     Call<Lecture> createNewExam(@Field("lecture_id") int id,
-                       @Field("date") String date);
-
-
-
-
+                                @Field("date") String date);
 }
