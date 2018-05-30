@@ -45,11 +45,13 @@ public class LeaTestDatabase {
     private void initExams() {
         List<Question> questions = new ArrayList<>();
         Question dummyQuestion = new Question();
+        dummyQuestion.setId(0);
         dummyQuestion.setQuestion("This is the question!");
         dummyQuestion.setAnswers(Arrays.asList(new Answer(), new Answer()));
         questions.add(dummyQuestion);
 
         dummyQuestion = new Question();
+        dummyQuestion.setId(1);
         dummyQuestion.setQuestion("This is another question!");
         dummyQuestion.setAnswers(Arrays.asList(new Answer(), new Answer()));
         questions.add(dummyQuestion);
@@ -202,10 +204,10 @@ public class LeaTestDatabase {
         examSubscription.setExam_id(exam_id);
         for(Exam exam : getMyUsers().getExams())
         {
-           if(exam.getId() == exam_id)
-           {
-               return examSubscription;
-           }
+            if(exam.getId() == exam_id)
+            {
+                return examSubscription;
+            }
         }
         getMyUsers().addExam(getExamById(exam_id));
         return examSubscription;
@@ -226,4 +228,5 @@ public class LeaTestDatabase {
 
         return examSubscription;
     }
+
 }

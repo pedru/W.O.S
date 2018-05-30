@@ -12,4 +12,11 @@
     <string name="questionText">questionText</string>
     <string name="action_remember">Remember Exam</string>
     <string name="studyName">studyName</string>
+    <string name="addQuestion">Add question here...</string>
+    <string name="saveQuestionToast">Question submitted</string>
+    <string name="questionTextEmptyToast">\"Please write your question\"</string>
+    <string name="title_activity_question_detail">Question</string>
+    <string name="answerTextEmpty">Empty answer</string>
+    <string name="answerSaved">Answer added</string>
+
 </resources>

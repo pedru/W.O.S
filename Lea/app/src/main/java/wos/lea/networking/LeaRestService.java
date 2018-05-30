@@ -6,6 +6,8 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -44,4 +46,9 @@ public interface LeaRestService {
     @FormUrlEncoded
     @POST("api/exams/unsubscribe")
     Call<ExamSubscription> unsubscribeExam(@Field("exam_id") int exam_id);
+
+    @FormUrlEncoded
+    @POST("api/exams/")
+    Call<Lecture> createNewExam(@Field("lecture_id") int id,
+                                @Field("date") String date);
 }

@@ -1,13 +1,18 @@
 from datetime import date
 
+from django.contrib.auth.models import User
 from django.test import TestCase, TransactionTestCase, SimpleTestCase
 from mixer.backend.django import mixer
-from rest_framework.test import APIClient
+from rest_framework.test import APIClient, force_authenticate
 
 from django.apps import apps
 from exams.apps import ExamsConfig
 from exams.models import Exam, Lecture, Question, Answer
 from studies.models import Study
+
+
+class UserTestCase(TransactionTestCase):
+    fixtures = ['test_user']
 
 
 class ExamsConfigTest(SimpleTestCase):
@@ -17,14 +22,13 @@ class ExamsConfigTest(SimpleTestCase):
 
 
 class ExamTestCase(TransactionTestCase):
-
     def setUp(self):
         lecture = mixer.blend(Lecture, name="Foolecture")
         study = mixer.blend(Study, name="Foostudy")
         self.test_exam = mixer.blend(Exam, lecture=lecture, study=study, date=date(2018, 6, 26))
 
     def test_str(self):
-        self.assertEquals(str(self.test_exam), "Foolecture (Foostudy) - 2018-06-26")
+        self.assertEquals(str(self.test_exam), "Foolecture")
 
     def test_question_count(self):
         self.assertEquals(self.test_exam.question_count, 0)
@@ -57,12 +61,10 @@ class AnswerTestCase(SimpleTestCase):
 
 
 class CreateExamApiTest(TransactionTestCase):
-    pass
-    # TODO API: User should be able to create a new exam
+    create_url = 'api/exams/'
 
 
 class RetrieveExamListApiTest(TransactionTestCase):
-
     def setUp(self):
         self.client = APIClient()
         self.test_lecture_name = 'Softwaretechnologie'
@@ -70,7 +72,7 @@ class RetrieveExamListApiTest(TransactionTestCase):
     def test_serial(self):
         test_lecture = mixer.blend(Lecture, name=self.test_lecture_name)
         mixer.blend(Exam, lecture=test_lecture)
-        response = self.client.get("http://localhost:8000/api/exams/")
+        response = self.client.get("/api/exams/")
         self.assertEquals(len(response.data), 1)
         self.assertEquals(response.data[0]['lecture']['name'], self.test_lecture_name)
 
@@ -85,9 +87,57 @@ class SearchExamApiTest(TestCase):
     pass
 
 
-class SubscribeToExamDateApiTest(TestCase):
-    # TODO API: Support the action of a user to subscribe to a specific exam date
-    pass
+class SubscriptionTestCase(UserTestCase):
+    subscribe_action_url = '/api/exams/subscribe'
+
+    def setUp(self):
+        self.user = User.objects.get(pk=1)
+        self.client = APIClient()
+        self.client.force_authenticate(self.user)
+
+    def subscribe_action(self, payload: dict = None):
+        return self.client.post(self.subscribe_action_url, payload, format='json')
+
+
+class SubscribeToExamDateApiTest(SubscriptionTestCase):
+
+    def test_subscribe(self):
+        # Omitting parameter
+        response = self.subscribe_action()
+        self.assertEquals(response.status_code, 422)
+
+        # Wrong type of parameter
+        response = self.subscribe_action({'exam_id': 'foo'})
+        self.assertEquals(response.status_code, 400)
+
+        # Non-existing exam
+        response = self.subscribe_action({'exam_id': 1})
+        self.assertEquals(response.status_code, 404)
+
+        # Successful subscription
+        mixer.blend(Exam, id=1)
+        response = self.subscribe_action({'exam_id': '1'})
+        self.assertEquals(response.status_code, 201)
+
+
+class UnsubscribeFromExamTestCase(SubscriptionTestCase):
+    subscribe_action_url = '/api/exams/unsubscribe'
+
+    def test_unsubscribe(self):
+        exam = mixer.blend(Exam, id=1)
+        self.user.exams.add(exam)
+        self.assertEquals(exam.subscribed.count(), 1)
+
+        response = self.subscribe_action({'exam_id': '1'})
+        self.assertEquals(exam.subscribed.count(), 0)
+        self.assertEquals(response.status_code, 200)
+
+        response = self.subscribe_action({'exam_id': 'foo'})
+        self.assertEquals(response.status_code, 400)
+
+        response = self.subscribe_action({})
+        self.assertEquals(response.status_code, 422)
+
 
 
 class CreateQuestionApiTest(TestCase):
@@ -108,3 +158,25 @@ class RateQuestionApiTest(TestCase):
 class RateAnswerApiTest(TestCase):
     # TODO API: Users are able to rate answers
     pass
+
+class UpvoteQuestionApiTest(UserTestCase):
+    upvote_url = '/api/question/upvote'
+    def setUp(self):
+        self.user = User.objects.get(pk=1)
+        self.client = APIClient()
+        self.client.force_authenticate(self.user)
+
+    def test_upvote(self):
+        mixer.blend(Question, id=1)
+        response = self.client.post(self.upvote_url,{'id':1})
+        self.assertEqual(response.status_code, 201)
+        response = self.client.post(self.upvote_url, {'id': 1})
+        self.assertEqual(response.status_code, 409)
+        response = self.client.post(self.upvote_url,{'id_exam':1})
+        self.assertEqual(response.status_code, 422)
+        response = self.client.post(self.upvote_url,{'id':2})
+        self.assertEqual(response.status_code, 404)
+        response = self.client.post(self.upvote_url, {})
+        self.assertEqual(response.status_code, 422)
+
+

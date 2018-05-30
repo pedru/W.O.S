@@ -3,12 +3,15 @@ package wos.lea;
 import android.content.Intent;
 import android.support.annotation.DrawableRes;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.view.menu.ActionMenuItemView;
 import android.util.Log;
 import android.view.View;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,6 +22,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.onData;
+import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withHint;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +50,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.core.AllOf.allOf;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
@@ -51,8 +64,8 @@ public class ExamDetailActivityTest {
 
     @Test
     public void examListAdapterExistsTest() {
-        ListView listView = testRule.getActivity().findViewById(R.id.questionList);
-        ListAdapter adapter = listView.getAdapter();
+        RecyclerView listView = testRule.getActivity().findViewById(R.id.questionRecyclerView);
+        RecyclerView.Adapter adapter = listView.getAdapter();
         assertNotNull(adapter);
     }
 
@@ -106,5 +119,20 @@ public class ExamDetailActivityTest {
             }
         }
         assertTrue((new_exams_size)==(original_exams_size-1) && (exam_not_found));
+    }
+
+    @Test
+    public void createQuestionTest()
+    {
+        onView(withId(R.id.add_question)).perform(click());
+        onView(withId(R.id.question_text)).check(matches(withHint("Add question here...")));
+    }
+
+    @Test
+    public void viewQuestionDetailTest()
+    {
+        onView(withId(R.id.questionRecyclerView))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.display_question_text)).check(matches(withHint("Question")));
     }
 }
