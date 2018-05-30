@@ -43,6 +43,7 @@ public class ExamDetailActivity extends AppCompatActivity {
     private UserDetail userDetail;
     private RecyclerView questionListView;
     private List<Question> questions;
+    private Menu menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class ExamDetailActivity extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
 
 
-        int id = getIntent().getIntExtra("examId", 1);
+        id = getIntent().getIntExtra("examId", 1);
         //questionListView = findViewById(R.id.questionList);
         questionListView = findViewById(R.id.questionRecyclerView);
         questionListView.addItemDecoration(new DividerItemDecoration(this, VERTICAL));
@@ -108,15 +109,19 @@ public class ExamDetailActivity extends AppCompatActivity {
 
                 UserDetail userDetail = response.body();
                 exams = new ArrayList<>(userDetail.getExams());
+                MenuItem item = menu.findItem(R.id.action_remember);
                  for (Exam ex : exams) {
                     if(ex.getId() == id){
                         canRememberExam = false;
+                        item.setIcon(R.drawable.ic_action_star_10);
                         break;
                     }
                     else {
+                        item.setIcon(R.drawable.ic_action_star_0);
                         canRememberExam = true;
                     }
                 }
+
             }
 
             @Override
@@ -129,6 +134,7 @@ public class ExamDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         getMenuInflater().inflate(R.menu.exam_detail_menu, menu);
         return true;
     }

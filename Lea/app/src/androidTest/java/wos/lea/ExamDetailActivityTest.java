@@ -90,14 +90,6 @@ public class ExamDetailActivityTest {
     }
 
     @Test
-    public void menuCanRememberTest()
-    {
-        boolean subscribed = testRule.getActivity().getCanRememberExam();
-        onView(withId(R.id.action_remember)).perform(click());
-        assertTrue(subscribed != testRule.getActivity().getCanRememberExam());
-    }
-
-    @Test
     public void menuRememberUnsubscribeExamTest() {
 
         LeaTestRestService leaRestService = (LeaTestRestService) NetworkManager.getInstance().getLeaRestService();
@@ -120,6 +112,15 @@ public class ExamDetailActivityTest {
         }
         assertTrue((new_exams_size)==(original_exams_size-1) && (exam_not_found));
     }
+
+    @Test
+    public void menuCanRememberTest()
+    {
+        boolean subscribed = testRule.getActivity().getCanRememberExam();
+        onView(withId(R.id.action_remember)).perform(click());
+        assertTrue(subscribed != testRule.getActivity().getCanRememberExam());
+    }
+
 
     @Test
     public void createQuestionTest()
