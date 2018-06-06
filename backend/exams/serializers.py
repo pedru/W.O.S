@@ -7,7 +7,20 @@ from exams.models import Exam, Question, Lecture, Answer
 class AnswerListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = ('text', 'owner')
+        fields = ('text', 'user')
+
+
+class AnswerCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = ['question_id', 'text']
+
+    def create(self, validated_data):
+        text = validated_data['text']
+        question = Question.objects.get(pk=validated_data['question_id'])
+        created_model = self.Meta.model.objects.create(question=question, text=text, user=validated_data['user'])
+        created_model.save()
+        return created_model
 
 
 class QuestionListSerializer(serializers.ModelSerializer):
@@ -22,19 +35,18 @@ class QuestionDetailSerializer(QuestionListSerializer):
     answers = AnswerListSerializer(many=True)
 
     class Meta:
-        fields = QuestionListSerializer.Meta.fields + ['answers',]
+        fields = QuestionListSerializer.Meta.fields + ['answers', ]
 
 
 class QuestionCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ['exam_id', 'question', 'user']
+        fields = ['exam_id', 'question']
 
     def create(self, validated_data):
-        user_id = validated_data['user_id']
         question = validated_data['question']
         exam = Exam.objects.get(pk=validated_data['exam_id'])
-        created_model = self.Meta.model.objects.create(exam=exam, question=question, user_id=user_id)
+        created_model = self.Meta.model.objects.create(exam=exam, question=question, user=validated_data['user'])
         created_model.save()
         return created_model
 
@@ -65,12 +77,12 @@ class ExamCreateSerializer(serializers.ModelSerializer):
     # owner = serializers.ReadOnlyField()
     class Meta:
         model = Exam
-        fields = ['lecture_id', 'date', 'owner_id']
+        fields = ['lecture_id', 'date']
 
     def create(self, validated_data):
         lecture = Lecture.objects.get(pk=validated_data['lecture_id'])
-        owner_id = validated_data['owner'].id
-        created_model = self.Meta.model.objects.create(lecture=lecture, date=validated_data['date'], owner_id=owner_id)
+        created_model = self.Meta.model.objects.create(lecture=lecture, date=validated_data['date'],
+                                                       owner=validated_data['owner'])
         created_model.save()
         return created_model
 
