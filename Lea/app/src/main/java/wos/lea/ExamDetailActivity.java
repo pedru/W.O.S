@@ -43,7 +43,7 @@ public class ExamDetailActivity extends AppCompatActivity {
     private UserDetail userDetail;
     private RecyclerView questionListView;
     private List<Question> questions;
-    private Menu menu;
+    //private Menu menu;
     private  QuestionListAdapter questionListAdapter;
 
     @Override
@@ -56,7 +56,7 @@ public class ExamDetailActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
-
+        invalidateOptionsMenu();
 
         id = getIntent().getIntExtra("examId", 1);
         //questionListView = findViewById(R.id.questionList);
@@ -86,35 +86,6 @@ public class ExamDetailActivity extends AppCompatActivity {
             }
         });
 
-        Call<UserDetail> call_subscribe = NetworkManager.getInstance().leaRestService.getMyUser();
-        call_subscribe.enqueue(new Callback<UserDetail>() {
-            @Override
-            public void onResponse(Call<UserDetail> call_subscribe, Response<UserDetail> response) {
-
-                UserDetail userDetail = response.body();
-                exams = new ArrayList<>(userDetail.getExams());
-
-                MenuItem item = menu.findItem(R.id.action_remember);
-                 for (Exam ex : exams) {
-                    if(ex.getId() == id){
-                        canRememberExam = false;
-                        item.setIcon(R.drawable.ic_action_star_10);
-                        break;
-                    }
-                    else {
-                        item.setIcon(R.drawable.ic_action_star_0);
-                        canRememberExam = true;
-                    }
-                }
-
-            }
-
-
-            @Override
-            public void onFailure(Call<UserDetail> call_subscribe, Throwable t) {
-                Log.d("EXAMS", "FAIL");
-            }
-        });
 
     }
 
@@ -126,6 +97,7 @@ public class ExamDetailActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ExamDetail> call, Response<ExamDetail> response) {
                 examDetail = response.body();
+                Log.d("TESTCASE", "EXAM: "+ examDetail.toString());
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
                 String examDate = simpleDateFormat.format(examDetail.getDate());
                 ((TextView) findViewById(R.id.appBarExamDate)).setText(examDate);
@@ -152,6 +124,7 @@ public class ExamDetailActivity extends AppCompatActivity {
 
         Log.d("FUU", "RESUME");
         questions.clear();
+        questionListAdapter = new QuestionListAdapter(questions, id);
         updateQuestionList(questionListAdapter);
 
     }
@@ -161,7 +134,34 @@ public class ExamDetailActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.exam_detail_menu, menu);
-        this.menu = menu;
+
+        final MenuItem item = menu.findItem(R.id.action_remember);
+        Call<UserDetail> call_subscribe = NetworkManager.getInstance().leaRestService.getMyUser();
+        call_subscribe.enqueue(new Callback<UserDetail>() {
+            @Override
+            public void onResponse(Call<UserDetail> call_subscribe, Response<UserDetail> response) {
+
+                UserDetail userDetail = response.body();
+                exams = new ArrayList<>(userDetail.getExams());
+                for (Exam ex : exams) {
+                    if(ex.getId() == id){
+                        canRememberExam = false;
+                        item.setIcon(R.drawable.ic_action_star_10);
+                        break;
+                    }
+                    else {
+                        item.setIcon(R.drawable.ic_action_star_0);
+                        canRememberExam = true;
+                    }
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<UserDetail> call_subscribe, Throwable t) {
+                Log.d("EXAMS", "FAIL");
+            }
+        });
         return true;
     }
 
@@ -218,7 +218,7 @@ public class ExamDetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        this.menu = menu;
+
         MenuItem item = menu.findItem(R.id.action_remember);
         if(canRememberExam){
             item.setIcon(R.drawable.ic_action_star_0);
