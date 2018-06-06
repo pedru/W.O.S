@@ -120,7 +120,7 @@ public class ExamDetailActivity extends AppCompatActivity {
 
         Log.d("FUU", "RESUME");
         questions.clear();
-        questionListAdapter = new QuestionListAdapter(questions, id);
+        //questionListAdapter = new QuestionListAdapter(questions, id);
         updateQuestionList(questionListAdapter);
 
     }
