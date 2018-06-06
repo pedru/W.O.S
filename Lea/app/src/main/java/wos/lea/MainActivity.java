@@ -65,11 +65,18 @@ public class MainActivity extends AppCompatActivity
 
         authenticate();
 
+    }
+
+    @Override
+    public void onResume() {
+
+        super.onResume();
+        updateList();
+    }
+
+    private void updateList()
+    {
         Call<UserDetail> call = NetworkManager.getInstance().leaRestService.getMyUser();
-
-        
-
-
         call.enqueue(new Callback<UserDetail>() {
             @Override
             public void onResponse(Call<UserDetail> call, Response<UserDetail> response) {
@@ -77,7 +84,7 @@ public class MainActivity extends AppCompatActivity
                 UserDetail userDetail = response.body();
                 Log.d("EXAMS", "RESPONSE: " + response.body().getExams());
                 exams = new ArrayList<>(userDetail.getExams());
-             //   exams = new ArrayList<>();
+                //   exams = new ArrayList<>();
                 if(exams.isEmpty())
                 {
                     findViewById(R.id.exams_layout).setVisibility(View.GONE);
@@ -99,25 +106,19 @@ public class MainActivity extends AppCompatActivity
                 Log.d("EXAMS", "FAIL");
             }
         });
-
-
-        examList = findViewById(R.id.examList);
-
-
-
-
-        ImageButton btn = findViewById(R.id.searchButton);
-
     }
+
+
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-        }
+        }*/
     }
 
     @Override
@@ -150,7 +151,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+    /*    int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
@@ -167,7 +168,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        drawer.closeDrawer(GravityCompat.START);*/
         return true;
     }
 
@@ -190,7 +191,6 @@ public class MainActivity extends AppCompatActivity
 
                     TokenResponse tr;
                     tr  = response.body();
-                    Log.d("AUTH", "Successful user: " + tr.getUser()+ " TOKEN:" + tr.getToken());
 
                     saveAuthFile(tr.getToken());
                 }

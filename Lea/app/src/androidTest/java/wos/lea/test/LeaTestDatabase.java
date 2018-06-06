@@ -1,8 +1,12 @@
 package wos.lea.test;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,11 +14,13 @@ import java.util.Map;
 import wos.lea.networking.Answer;
 import wos.lea.networking.Exam;
 import wos.lea.networking.ExamDetail;
+import wos.lea.networking.ExamSubscription;
 import wos.lea.networking.Lecture;
 import wos.lea.networking.LectureDetail;
 import wos.lea.networking.Question;
 import wos.lea.networking.Study;
 import wos.lea.networking.StudyDetail;
+import wos.lea.networking.UserDetail;
 
 public class LeaTestDatabase {
 
@@ -22,7 +28,8 @@ public class LeaTestDatabase {
     private List<Exam> savedExams = new ArrayList<>();
     private List<Study> studies = new ArrayList<>();
     private List<Lecture> lectures = new ArrayList<>();
-    private LectureDetail lecture;
+    private List<LectureDetail> lecture = new ArrayList<>();
+    private UserDetail users;
 
     private Map<Study, Lecture> studyLectureMap = new HashMap<>();
     private Map<Lecture, Exam> lectureExamMap = new HashMap<>();
@@ -33,19 +40,20 @@ public class LeaTestDatabase {
         initStudies();
         initExams();
         initLectureDetail();
-
-
+        initUserDetals();
 
     }
 
-    private void initExams() {
+    public void initExams() {
         List<Question> questions = new ArrayList<>();
         Question dummyQuestion = new Question();
+        dummyQuestion.setId(0);
         dummyQuestion.setQuestion("This is the question!");
         dummyQuestion.setAnswers(Arrays.asList(new Answer(), new Answer()));
         questions.add(dummyQuestion);
 
         dummyQuestion = new Question();
+        dummyQuestion.setId(1);
         dummyQuestion.setQuestion("This is another question!");
         dummyQuestion.setAnswers(Arrays.asList(new Answer(), new Answer()));
         questions.add(dummyQuestion);
@@ -55,16 +63,26 @@ public class LeaTestDatabase {
         exam.setQuestions(questions);
         exam.setCreated(new Date());
         exam.setLecture(lectures.get(0));
-        exam.setDate(new Date());
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2018);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 21);
+        Date date = cal.getTime();
+        exam.setDate(date);
         allExams.add(exam);
         savedExams.add(exam);
 
         exam = new ExamDetail();
-        exam.setId(1);
+        exam.setId(2);
         exam.setQuestions(questions);
+        cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2018);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 20);
+        date = cal.getTime();
         exam.setCreated(new Date());
         exam.setLecture(lectures.get(1));
-        exam.setDate(new Date());
+        exam.setDate(date);
         allExams.add(exam);
         savedExams.add(exam);
 
@@ -126,11 +144,29 @@ public class LeaTestDatabase {
     }
 
     public void initLectureDetail(){
-        lecture = new LectureDetail();
-        lecture.setExams(allExams);
-        lecture.setId(0);
-        lecture.setName("Softwaretechnologie");
+        LectureDetail lecture1 = new LectureDetail();
+        lecture1.setExams(allExams);
+        lecture1.setId(0);
+        lecture1.setName("Softwaretechnologie");
+
+        lecture.add(lecture1);
+
+        LectureDetail lecture2 = new LectureDetail();
+        List <Exam> noExams = new ArrayList<Exam>();
+        lecture2.setExams(noExams);
+        lecture2.setId(1);
+        lecture2.setName("Analysis 1");
+
+        lecture.add(lecture2);
     }
+
+    public void initUserDetals(){
+        users = new UserDetail();
+        users.setExams(allExams);
+        users.setUsername("Test ABC");
+        users.setIdM(1);
+    }
+
 
     public List<Exam> getAllExams() {
         return (List<Exam>) allExams;
@@ -152,16 +188,66 @@ public class LeaTestDatabase {
 
     public ExamDetail getExamById(int id) {
         ExamDetail detail;
-
+        Log.d("TESTCASE", "FUUUUU " + allExams.size());
         for (Exam tmp: allExams) {
             if (tmp.getId() == id) {
                 return (ExamDetail) tmp;
             }
         }
+        Log.d("TESTCASE", "BAAAAAAAAAAAAAAAAR");
         return null;
     }
 
     public LectureDetail getLectureById(int id) {
+        for (LectureDetail tmp: lecture) {
+            if (tmp.getId() == id) {
+                return (LectureDetail) tmp;
+            }
+        }
+        return null;
+    }
+
+    public UserDetail getMyUsers() {
+        return users;
+    }
+
+    public ExamSubscription rememberExam(int exam_id)
+    {
+        ExamSubscription examSubscription = new ExamSubscription();
+        examSubscription.setExam_id(exam_id);
+        for(Exam exam : getMyUsers().getExams())
+        {
+            if(exam.getId() == exam_id)
+            {
+                return examSubscription;
+            }
+        }
+        getMyUsers().addExam(getExamById(exam_id));
+        return examSubscription;
+    }
+
+    public ExamSubscription forgetExam(int exam_id)
+    {
+        ExamSubscription examSubscription = new ExamSubscription();
+        examSubscription.setExam_id(exam_id);
+        for(Exam exam : getMyUsers().getExams())
+        {
+            if(exam.getId() == exam_id)
+            {
+                getMyUsers().removeExam(exam);
+                return examSubscription;
+            }
+        }
+
+        return examSubscription;
+    }
+
+    public Lecture createNewExam(int id, String date) {
+        Lecture lecture = new Lecture();
+        lecture.setId(id);
+        lecture.setName("Mobile Applications");
         return lecture;
     }
+
+
 }

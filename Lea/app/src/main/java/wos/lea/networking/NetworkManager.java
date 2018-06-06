@@ -2,6 +2,7 @@ package wos.lea.networking;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -9,6 +10,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -29,7 +31,7 @@ public class NetworkManager {
     private String authtoken = "";
 
 
-    private String API_BASE_URL = "http://netzweber.at:8080";
+    private String API_BASE_URL = "https://netzweber.at:8080";
 
     private NetworkManager() {
         try {
@@ -42,6 +44,7 @@ public class NetworkManager {
 
     private LeaRestService createLeaRestService() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+
         httpClient.addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Interceptor.Chain chain) throws IOException {
@@ -51,7 +54,7 @@ public class NetworkManager {
                         .header("Authorization", "Token " + authtoken)
                         .method(original.method(), original.body())
                         .build();
-
+                Log.d("NETWORK", original.toString());
                 return chain.proceed(request);
             }
         });
