@@ -7,7 +7,7 @@ from rest_framework.test import APIClient, force_authenticate
 
 from django.apps import apps
 from exams.apps import ExamsConfig
-from exams.models import Exam, Lecture, Question, Answer
+from exams.models import Exam, Lecture, Question, Answer, QuestionVoting
 from studies.models import Study
 
 
@@ -64,6 +64,17 @@ class QuestionTestCase(SimpleTestCase):
         question = Question(question='Foo?')
         self.assertEquals(str(question), question.question)
 
+class QuestionPropertiesTestCase(TransactionTestCase):
+
+    def test_score(self):
+        q = mixer.blend(Question)
+        mixer.blend(QuestionVoting, weight=1, question=q)
+
+        self.assertEquals(q.score, 1)
+        mixer.blend(QuestionVoting, weight=1, question=q)
+        self.assertEquals(q.score, 2)
+        mixer.blend(QuestionVoting, weight=-1, question=q)
+        self.assertEquals(q.score, 1)
 
 class AnswerTestCase(SimpleTestCase):
     def test_str(self):
