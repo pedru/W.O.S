@@ -107,7 +107,8 @@ public class QuestionDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 EditText answerText = (EditText) findViewById(R.id.answerText);
-                answerText.setFocusable(true);
+                answerText.requestFocus();
+                answerList.setVisibility(View.GONE);
                 answerText.setVisibility(View.VISIBLE);
                 InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
@@ -166,11 +167,15 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
             }
             else {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY,0);
                 Call<Void> call = NetworkManager.getInstance().getLeaRestService().createNewAnswer(questionId,editText.getText().toString());
                 call.enqueue(new Callback<Void>() {
                                  @Override
                                  public void onResponse(Call<Void> call, Response<Void> response) {
                                      Log.d("subtag", "onresponse " + response);
+                                     finish();
+                                     startActivity(getIntent());
                                  }
 
                                  @Override
