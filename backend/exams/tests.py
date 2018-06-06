@@ -64,6 +64,7 @@ class QuestionTestCase(SimpleTestCase):
         question = Question(question='Foo?')
         self.assertEquals(str(question), question.question)
 
+
 class QuestionPropertiesTestCase(TransactionTestCase):
 
     def test_score(self):
@@ -75,6 +76,7 @@ class QuestionPropertiesTestCase(TransactionTestCase):
         self.assertEquals(q.score, 2)
         mixer.blend(QuestionVoting, weight=-1, question=q)
         self.assertEquals(q.score, 1)
+
 
 class AnswerTestCase(SimpleTestCase):
     def test_str(self):
@@ -195,7 +197,8 @@ class CreateQuestionApiTest(UserTestCase):
     def test_create_question(self):
         # Create a new question via the API
 
-        response = self.client.post(self.question_api_url, {'exam_id': self.exam_id, 'question': self.test_question, 'user':self.request.user})
+        response = self.client.post(self.question_api_url, {'exam_id': self.exam_id, 'question': self.test_question,
+                                                            'user': self.request.user})
         self.assertEquals(response.status_code, 201)
 
         # Check if the question was created
@@ -219,7 +222,7 @@ class CreateQuestionApiTest(UserTestCase):
 
 
 class CreateAnswerApiTest(UserTestCase):
-    answer_api_url = '/api/answers'
+    answer_api_url = '/api/answers/'
 
     def setUp(self):
         # Create a question to post an answer to
@@ -272,8 +275,10 @@ class RateAnswerApiTest(TestCase):
     # TODO API: Users are able to rate answers
     pass
 
+
 class UpvoteQuestionApiTest(UserTestCase):
     upvote_url = '/api/question/upvote'
+
     def setUp(self):
         self.user = User.objects.get(pk=1)
         self.client = APIClient()
@@ -281,15 +286,13 @@ class UpvoteQuestionApiTest(UserTestCase):
 
     def test_upvote(self):
         mixer.blend(Question, id=1)
-        response = self.client.post(self.upvote_url,{'id':1})
+        response = self.client.post(self.upvote_url, {'id': 1})
         self.assertEqual(response.status_code, 201)
         response = self.client.post(self.upvote_url, {'id': 1})
         self.assertEqual(response.status_code, 409)
-        response = self.client.post(self.upvote_url,{'id_exam':1})
+        response = self.client.post(self.upvote_url, {'id_exam': 1})
         self.assertEqual(response.status_code, 422)
-        response = self.client.post(self.upvote_url,{'id':2})
+        response = self.client.post(self.upvote_url, {'id': 2})
         self.assertEqual(response.status_code, 404)
         response = self.client.post(self.upvote_url, {})
         self.assertEqual(response.status_code, 422)
-
-

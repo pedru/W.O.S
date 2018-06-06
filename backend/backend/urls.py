@@ -1,12 +1,10 @@
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url, include
-from django.views.generic import RedirectView
 from rest_framework import routers
 from rest_framework.documentation import include_docs_urls
-from rest_framework_swagger.views import get_swagger_view
 
-from exams.views import ExamSearch, ExamViewSet, LectureViewSet, subscribe, unsubscribe, upvote, AnswerViewSet, QuestionViewSet
+from exams.views import ExamSearch, ExamViewSet, LectureViewSet, subscribe, unsubscribe, QuestionViewSet, AnswerViewSet, upvote
 from studies.views import StudyListViewSet
 from users.views import create_user, user_detail
 
