@@ -7,10 +7,9 @@ from rest_framework.response import Response
 import logging
 
 from backend.permissions import IsOwnerOrReadOnly
-from exams.models import Exam, Question, Lecture, Answer, QuestionVoting
+from exams.models import Exam, Question, Lecture, QuestionVoting
 from exams.serializers import ExamListSerializer, QuestionListSerializer, LectureDetailSerializer, LectureSerializer, \
-    ExamDetailSerializer, ExamCreateSerializer, AnswerListSerializer, QuestionDetailSerializer, \
-    QuestionCreateSerializer, AnswerCreateSerializer
+    ExamDetailSerializer, ExamCreateSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +21,7 @@ class ExamViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
 
     def get_serializer_class(self):
+        print(self.action)
         if self.action == 'retrieve':
             return ExamDetailSerializer
         if self.action == 'create':
@@ -30,47 +30,19 @@ class ExamViewSet(viewsets.ModelViewSet):
             return ExamListSerializer
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user, lecture_id=self.request.data['lecture_id'], date=self.request.data['date'])
+        serializer.save(owner=self.request.user, lecture_id=self.request.data['lecture_id'])
 
 
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
-    permission_classes = (IsAuthenticated,)
-    authentication_classes = (TokenAuthentication,)
+    serializer_class = QuestionListSerializer
 
-    def get_serializer_class(self):
-        if self.action == 'retrieve':
-            return QuestionDetailSerializer
-        elif self.action == 'create':
-            return QuestionCreateSerializer
-        else:
-            return QuestionListSerializer
-
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user, question=self.request.data['question'], exam_id=self.request.data['exam_id'])
-
-
-class AnswerViewSet(viewsets.ModelViewSet):
-    queryset = Answer.objects.all()
-    serializer_class = AnswerListSerializer
-
-    def get_serializer_class(self):
-        if self.action == 'retrieve':
-            return AnswerListSerializer
-        elif self.action == 'create':
-            return AnswerCreateSerializer
-        else:
-            return AnswerListSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user, text=self.request.data['text'], question_id=self.request.data['question_id'])
 
 class LectureViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Lecture.objects.all()
 
     def get_serializer_class(self):
-        if self.action == 'retrieve':
+        if (self.action == 'retrieve'):
             return LectureDetailSerializer
         else:
             return LectureSerializer
@@ -85,6 +57,7 @@ class ExamSearch(generics.ListAPIView):
         for the currently authenticated user.
         """
         needle = self.kwargs['needle']
+        print(needle)
         return Exam.objects.all()
 
 
@@ -104,13 +77,9 @@ def subscribe(request):
     exam.subscribed.add(request.user)
     return Response({'detail': 'Subscribed to Exam {}'.format(exam)}, 201)
 
-
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def unsubscribe(request):
-    """
-    Unsubscribe from an exam.
-    """
     if 'exam_id' not in request.data:
         return Response({'detail': 'Missing parameter exam_id'}, 422)
 
@@ -127,14 +96,25 @@ def unsubscribe(request):
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
-def upvote(request):
+def vote(request):
     if 'id' not in request.data:
         return Response({'detail': 'Missing parameter id'}, 422)
     question_id = request.data['id']
+    if 'weight' not in request.data:
+        return Response({'detail': 'Missing parameter weight'}, 422)
+    question_rating = request.data['weight']
     question = get_object_or_404(Question, pk=question_id)
+
+    if ((question_rating != '1') and (question_rating != '-1')):
+        return Response({'detail': 'Question "{}" weight  out of range'.format(question)}, 400)
+
     try:
-        QuestionVoting.objects.get(user=request.user, question=question)
-        return Response({'detail': 'Question "{}" is already upvoted'.format(question)}, 409)
+        question_voting = get_object_or_404(QuestionVoting, question_id=question_id)
+        question_voting.weight = question_rating
+        question_voting.save()
+        return Response({'detail': 'Question "{}" is changed'.format(question)}, 201)
     except QuestionVoting.DoesNotExist:
-        QuestionVoting(user=request.user, question=question, weight=1).save()
-        return Response({'detail': 'Upvoted question "{}"'.format(question)}, 201)
+        QuestionVoting(user=request.user, question=question, weight=question_rating).save()
+    return Response({'detail': 'QuestionVote  "{}" create'.format(question)}, 201)
+
+
