@@ -2,6 +2,7 @@ package wos.lea;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.ActivityInstrumentationTestCase2;
@@ -137,6 +138,8 @@ public class SearchExamTest {
 
     @Test
     public void createExamNoDate(){
+
+        Espresso.closeSoftKeyboard();
         SearchExamActivity activity = testRule.getActivity();
 
         //fill spinner
