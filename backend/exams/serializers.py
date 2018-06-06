@@ -7,7 +7,7 @@ from exams.models import Exam, Question, Lecture, Answer
 class AnswerListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = ('text', 'owner')
+        fields = ('text', 'user')
 
 
 class AnswerCreateSerializer(serializers.ModelSerializer):
