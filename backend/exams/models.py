@@ -60,6 +60,14 @@ class Question(models.Model):
     question = models.TextField()  # TODO: Formatierungsmöglichkeiten?
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    @property
+    def score(self):
+        sum = 0
+        for v in self.votings.all():
+            sum += v.weight
+        return sum
+
+
     def __str__(self):
         return self.question
 
