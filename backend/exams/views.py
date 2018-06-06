@@ -9,7 +9,8 @@ import logging
 from backend.permissions import IsOwnerOrReadOnly
 from exams.models import Exam, Question, Lecture, Answer, QuestionVoting
 from exams.serializers import ExamListSerializer, QuestionListSerializer, LectureDetailSerializer, LectureSerializer, \
-    ExamDetailSerializer, ExamCreateSerializer, AnswerListSerializer, QuestionDetailSerializer, QuestionCreateSerializer
+    ExamDetailSerializer, ExamCreateSerializer, AnswerListSerializer, QuestionDetailSerializer, \
+    QuestionCreateSerializer, AnswerCreateSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +22,6 @@ class ExamViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
 
     def get_serializer_class(self):
-        print(self.action)
         if self.action == 'retrieve':
             return ExamDetailSerializer
         if self.action == 'create':
@@ -30,7 +30,7 @@ class ExamViewSet(viewsets.ModelViewSet):
             return ExamListSerializer
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user, lecture_id=self.request.data['lecture_id'])
+        serializer.save(owner=self.request.user, lecture_id=self.request.data['lecture_id'], date=self.request.data['date'])
 
 
 class QuestionViewSet(viewsets.ModelViewSet):
@@ -55,6 +55,16 @@ class AnswerViewSet(viewsets.ModelViewSet):
     queryset = Answer.objects.all()
     serializer_class = AnswerListSerializer
 
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return AnswerListSerializer
+        elif self.action == 'create':
+            return AnswerCreateSerializer
+        else:
+            return AnswerListSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user, text=self.request.data['text'], question_id=self.request.data['question_id'])
 
 class LectureViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Lecture.objects.all()

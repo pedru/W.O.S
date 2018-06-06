@@ -10,6 +10,19 @@ class AnswerListSerializer(serializers.ModelSerializer):
         fields = ('text', 'owner')
 
 
+class AnswerCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = ['question_id', 'text']
+
+    def create(self, validated_data):
+        text = validated_data['text']
+        question = Question.objects.get(pk=validated_data['question_id'])
+        created_model = self.Meta.model.objects.create(question=question, text=text, user=validated_data['user'])
+        created_model.save()
+        return created_model
+
+
 class QuestionListSerializer(serializers.ModelSerializer):
     answers = AnswerListSerializer(many=True)
 
@@ -22,7 +35,7 @@ class QuestionDetailSerializer(QuestionListSerializer):
     answers = AnswerListSerializer(many=True)
 
     class Meta:
-        fields = QuestionListSerializer.Meta.fields + ['answers',]
+        fields = QuestionListSerializer.Meta.fields + ['answers', ]
 
 
 class QuestionCreateSerializer(serializers.ModelSerializer):
@@ -64,11 +77,12 @@ class ExamCreateSerializer(serializers.ModelSerializer):
     # owner = serializers.ReadOnlyField()
     class Meta:
         model = Exam
-        fields = ['lecture_id', 'date', 'owner']
+        fields = ['lecture_id', 'date']
 
     def create(self, validated_data):
         lecture = Lecture.objects.get(pk=validated_data['lecture_id'])
-        created_model = self.Meta.model.objects.create(lecture=lecture, date=validated_data['date'], owner=validated_data['owner'])
+        created_model = self.Meta.model.objects.create(lecture=lecture, date=validated_data['date'],
+                                                       owner=validated_data['owner'])
         created_model.save()
         return created_model
 
