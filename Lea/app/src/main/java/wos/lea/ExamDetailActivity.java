@@ -97,7 +97,7 @@ public class ExamDetailActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ExamDetail> call, Response<ExamDetail> response) {
                 examDetail = response.body();
-                Log.d("TESTCASE", "EXAM: "+ examDetail.toString());
+                Log.d("TESTCASE", "EXAM: "+ id);
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
                 String examDate = simpleDateFormat.format(examDetail.getDate());
                 ((TextView) findViewById(R.id.appBarExamDate)).setText(examDate);

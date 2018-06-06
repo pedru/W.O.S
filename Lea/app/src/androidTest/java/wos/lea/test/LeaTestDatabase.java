@@ -188,12 +188,13 @@ public class LeaTestDatabase {
 
     public ExamDetail getExamById(int id) {
         ExamDetail detail;
-
+        Log.d("TESTCASE", "FUUUUU " + allExams.size());
         for (Exam tmp: allExams) {
             if (tmp.getId() == id) {
                 return (ExamDetail) tmp;
             }
         }
+        Log.d("TESTCASE", "BAAAAAAAAAAAAAAAAR");
         return null;
     }
 
