@@ -44,6 +44,7 @@ public class ExamDetailActivity extends AppCompatActivity {
     private RecyclerView questionListView;
     private List<Question> questions;
     private Menu menu;
+    private  QuestionListAdapter questionListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,13 +68,12 @@ public class ExamDetailActivity extends AppCompatActivity {
             Log.d("SCROLL", "fuuuuuu");
             questionListView.scrollToPosition(questionListView.getAdapter().getItemCount()-1);
         }
-
         questions = new ArrayList<>();
+        questionListAdapter = new QuestionListAdapter(questions, id);
+        questionListView.setAdapter(questionListAdapter);
 
-       final  QuestionListAdapter adapter = new QuestionListAdapter(questions, id);
-        questionListView.setAdapter(adapter);
 
-        updateQuestionList(adapter);
+       // updateQuestionList(questionListAdapter);
 
         FloatingActionButton fab = findViewById(R.id.add_question);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +142,17 @@ public class ExamDetailActivity extends AppCompatActivity {
                 Log.d("EXAMS", "FAIL");
             }
         });
+
+    }
+
+    @Override
+    public void onResume() {
+
+        super.onResume();
+
+        Log.d("FUU", "RESUME");
+        questions.clear();
+        updateQuestionList(questionListAdapter);
 
     }
 
