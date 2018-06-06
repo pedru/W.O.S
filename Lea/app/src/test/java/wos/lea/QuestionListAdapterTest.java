@@ -15,13 +15,13 @@ public class QuestionListAdapterTest {
 
     @Test
     public void adapterNullPointerTest() {
-        QuestionListAdapter adapter = new QuestionListAdapter(Mockito.mock(Context.class), null);
+        QuestionListAdapter adapter = new QuestionListAdapter(null, 1);
         Assert.assertNotNull(adapter);
     }
 
     @Test
     public  void adapterEmptyListTest() {
-        QuestionListAdapter adapter = new QuestionListAdapter(Mockito.mock(Context.class), new ArrayList<Question>());
+        QuestionListAdapter adapter = new QuestionListAdapter(new ArrayList<Question>(), 1);
         Assert.assertNotNull(adapter);
     }
 
@@ -30,7 +30,7 @@ public class QuestionListAdapterTest {
         List<Question> questionList = new ArrayList<>();
         questionList.add(null);
 
-        QuestionListAdapter adapter = new QuestionListAdapter(Mockito.mock(Context.class), questionList);
+        QuestionListAdapter adapter = new QuestionListAdapter(questionList, 1);
         Assert.assertNotNull(adapter);
     }
 
@@ -40,7 +40,7 @@ public class QuestionListAdapterTest {
         Question question = new Question();
         questionList.add(question);
 
-        QuestionListAdapter adapter = new QuestionListAdapter(Mockito.mock(Context.class), questionList);
+        QuestionListAdapter adapter = new QuestionListAdapter(questionList, 1);
         Assert.assertNotNull(adapter);
     }
 }
