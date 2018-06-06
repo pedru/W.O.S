@@ -62,12 +62,8 @@ public class ExamDetailActivity extends AppCompatActivity {
         //questionListView = findViewById(R.id.questionList);
         questionListView = findViewById(R.id.questionRecyclerView);
         questionListView.addItemDecoration(new DividerItemDecoration(this, VERTICAL));
-        int fromQue = getIntent().getIntExtra("fromQue", 0);
-        if(fromQue==1)
-        {
-            Log.d("SCROLL", "fuuuuuu");
-            questionListView.scrollToPosition(questionListView.getAdapter().getItemCount()-1);
-        }
+
+
         questions = new ArrayList<>();
         questionListAdapter = new QuestionListAdapter(questions, id);
         questionListView.setAdapter(questionListAdapter);
@@ -111,7 +107,7 @@ public class ExamDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ExamDetail> call, Throwable t) {
-                Log.d("EXAMS", "FAIL");
+
             }
         });
 
@@ -178,12 +174,12 @@ public class ExamDetailActivity extends AppCompatActivity {
                     call_sub.enqueue(new Callback<ExamSubscription>() {
                                          @Override
                                          public void onResponse(Call<ExamSubscription> call, Response<ExamSubscription> response) {
-                                             Log.d("subtag", "onresponse sub" + response);
+
                                          }
 
                                          @Override
                                          public void onFailure(Call<ExamSubscription> call, Throwable t) {
-                                             Log.d("EXAMS sub", "FAIL");
+
                                          }
                                      }
                     );
@@ -194,12 +190,12 @@ public class ExamDetailActivity extends AppCompatActivity {
                     call_unsub.enqueue(new Callback<ExamSubscription>() {
                                          @Override
                                          public void onResponse(Call<ExamSubscription> call, Response<ExamSubscription> response) {
-                                             Log.d("unsubtag", "onresponse unsubscribe" + response);
+
                                          }
 
                                          @Override
                                          public void onFailure(Call<ExamSubscription> call, Throwable t) {
-                                             Log.d("EXAMS unsubscribe", "FAIL");
+
                                          }
                                      }
                     );

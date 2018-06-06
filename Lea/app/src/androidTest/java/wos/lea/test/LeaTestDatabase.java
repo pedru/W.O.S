@@ -44,7 +44,7 @@ public class LeaTestDatabase {
 
     }
 
-    private void initExams() {
+    public void initExams() {
         List<Question> questions = new ArrayList<>();
         Question dummyQuestion = new Question();
         dummyQuestion.setId(0);
@@ -248,5 +248,6 @@ public class LeaTestDatabase {
         lecture.setName("Mobile Applications");
         return lecture;
     }
+
 
 }

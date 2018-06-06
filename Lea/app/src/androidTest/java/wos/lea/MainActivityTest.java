@@ -88,8 +88,8 @@ public class MainActivityTest {
         SharedPreferences sharedPref1 = testRule.getActivity().getPreferences(Context.MODE_PRIVATE);
         String authtoken = sharedPref1.getString("Token","");
         assertTrue(authtoken.length()>4);
-
     }
+
 
     @Test
     public void searchButton() {
@@ -98,7 +98,7 @@ public class MainActivityTest {
         intended(hasComponent(SearchExamActivity.class.getName()));
     }
 
-/*
+
     @Test
     public void clickOnExamTest() {
         ListView listView = testRule.getActivity().findViewById(R.id.examList);
@@ -109,8 +109,8 @@ public class MainActivityTest {
         onView(withText(text)).perform(click());
         intended(hasComponent(ExamDetailActivity.class.getName()));
     }
-*/
-/*
+
+
     @Test
     public void emptyExamList()
     {
@@ -125,7 +125,7 @@ public class MainActivityTest {
             assertEquals(0, examLayout.getVisibility());
         }
 
-    }*/
+    }
 
 
 

@@ -54,20 +54,5 @@ public class CreateQuestionActivityTest {
         onView(withText(R.string.questionTextEmptyToast)).inRoot(withDecorView(not(is(testRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
     }
 
-    @Test
-    public void questionSaveClickTest() {
-
-        //TODO write text
-        onView(withId(R.id.question_text)).perform(typeText("TESTTESTTEST"));
-
-       /* try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        onView(withId(R.id.save_question)).perform(scrollTo()).perform(click());
-        // onView(withText(R.string.saveQuestionToast)).inRoot(withDecorView(not(is(testRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));*/
-    }
 
 }

@@ -113,12 +113,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-        }
+        }*/
     }
 
     @Override
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+    /*    int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        drawer.closeDrawer(GravityCompat.START);*/
         return true;
     }
 
@@ -191,7 +191,6 @@ public class MainActivity extends AppCompatActivity
 
                     TokenResponse tr;
                     tr  = response.body();
-                    Log.d("AUTH", "Successful user: " + tr.getUser()+ " TOKEN:" + tr.getToken());
 
                     saveAuthFile(tr.getToken());
                 }

@@ -161,7 +161,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
             EditText editText = findViewById(R.id.answerText);
             if (editText.getText().toString().isEmpty())
             {
-                //TODO backend stuff
+
                 Toast toast = Toast.makeText(QuestionDetailActivity.this, R.string.answerTextEmpty, Toast.LENGTH_LONG);
                 toast.show();
 

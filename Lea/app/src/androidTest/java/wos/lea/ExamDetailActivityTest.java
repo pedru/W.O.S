@@ -117,14 +117,16 @@ public class ExamDetailActivityTest {
         assertTrue((new_exams_size)==(original_exams_size-1) );
     }*/
 
- /*   @Test
+    @Test
     public void menuCanRememberTest()
     {
         boolean subscribed = testRule.getActivity().getCanRememberExam();
         onView(withId(R.id.action_remember)).perform(click());
         assertTrue(subscribed != testRule.getActivity().getCanRememberExam());
+        LeaTestRestService leaTestRestService = (LeaTestRestService) NetworkManager.getInstance().getLeaRestService();
+        leaTestRestService.getLeaTestDatabase().initExams();
     }
-*/
+
 
     @Test
     public void createQuestionTest()
