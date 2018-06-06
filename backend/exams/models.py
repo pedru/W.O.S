@@ -60,6 +60,14 @@ class Question(models.Model):
     question = models.TextField()  # TODO: Formatierungsmöglichkeiten?
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    @property
+    def score(self):
+        sum = 0
+        for v in self.votings.all():
+            sum += v.weight
+        return sum
+
+
     def __str__(self):
         return self.question
 
@@ -68,6 +76,7 @@ class Answer(models.Model):
     """
     Possible answer to a question
     """
+    question = models.ForeignKey(Question, models.CASCADE, related_name='answers')
     text = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -86,7 +95,14 @@ class Rating(models.Model):
 
 
 # TODO: needs specification
-meeting_status = (('active','Active'),('canceled','Canceled'))
+meeting_status = (('active', 'Active'), ('canceled', 'Canceled'))
+
+
+class QuestionVoting(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE,related_name='votings')
+    date = models.DateField(auto_now=True)
+    weight = models.IntegerField(default=1, help_text="The weight of the vote, can be positive or negative.")
 
 class Meeting(models.Model):
     """
@@ -97,10 +113,10 @@ class Meeting(models.Model):
     date = models.DateField()
     status = models.IntegerField(choices=meeting_status)
 
+
 class MeetingAttendance(models.Model):
     """
     Stores which users will attend a meeting
     """
     meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-

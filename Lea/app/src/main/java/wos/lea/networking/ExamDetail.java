@@ -1,6 +1,5 @@
 package wos.lea.networking;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -8,17 +7,17 @@ import java.util.List;
  */
 
 public class ExamDetail extends Exam {
-    private int owner;
+    private int user;
 
     private List<Question> questions;
 
 
-    public int getOwner() {
-        return owner;
+    public int getUser() {
+        return user;
     }
 
-    public void setOwner(int owner) {
-        this.owner = owner;
+    public void setUser(int user) {
+        this.user = user;
     }
 
     public List<Question> getQuestions() {
@@ -28,4 +27,7 @@ public class ExamDetail extends Exam {
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
     }
+
+
+
 }

@@ -1,0 +1,80 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "anon1",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2018-04-23T09:27:43.632Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "password": "",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "anon2",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2018-04-24T14:32:45.008Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "password": "",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "anon3",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2018-04-24T16:29:35.132Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "026214c37ffba700e0b0389e9c0db7522200bfff",
+    "fields": {
+      "user": 1,
+      "created": "2018-04-25T14:22:12.651Z"
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "02a9101bc2d7832347688ac0a4b6e60d2ce94fd2",
+    "fields": {
+      "user": 2,
+      "created": "2018-04-25T11:40:28.707Z"
+    }
+  },
+  {
+    "model": "authtoken.token",
+    "pk": "090e44115a1951fea96f83c05e0854ad9f911251",
+    "fields": {
+      "user": 3,
+      "created": "2018-04-25T12:54:23.456Z"
+    }
+  }
+]

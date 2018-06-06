@@ -4,9 +4,9 @@
 
     <item
         android:id="@+id/action_search_exam"
+        android:icon="@drawable/ic_search_black_24dp"
         android:title="search exam"
-        android:icon="@android:drawable/ic_search_category_default"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_settings"
