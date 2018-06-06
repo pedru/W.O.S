@@ -1,10 +1,7 @@
 package wos.lea;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Movie;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,17 +9,16 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import wos.lea.networking.Exam;
-import wos.lea.networking.Question;
+import wos.lea.networking.Answer;
 
 /**
  * Created by martin on 11.04.18.
  */
 
-public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapter.MyViewHolder> {
+public class AnswerListAdapter extends RecyclerView.Adapter<AnswerListAdapter.MyViewHolder> {
 
-    private List<Question> questions;
-    private int examId;
+    private List<Answer> answers;
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         public TextView text;
@@ -40,25 +36,15 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
         @Override
         public void onClick(View view) {
 
-            Question question = questions.get(this.getAdapterPosition());
-
-            Log.d("QUESTIONS", "CLICKED " + question.getId() + " Adapter: " + this.getAdapterPosition());
-
-
-            Intent intent = new Intent(context, QuestionDetailActivity.class);
-            intent.putExtra("questionId", question.getId());
-
-            intent.putExtra("examId", examId);
-            context.startActivity(intent);
 
         }
     }
 
 
 
-    public QuestionListAdapter(List<Question> questions, int examId) {
-        this.questions = questions;
-        this.examId = examId;
+    public AnswerListAdapter(List<Answer> answers) {
+        this.answers = answers;
+
     }
 
     @Override
@@ -71,14 +57,14 @@ public class QuestionListAdapter extends RecyclerView.Adapter<QuestionListAdapte
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Question question = questions.get(position);
-        holder.text.setText(question.getQuestion());
+        Answer answer = answers.get(position);
+        holder.text.setText(answer.getText());
 
     }
 
     @Override
     public int getItemCount() {
-        return questions.size();
+        return answers.size();
     }
 
 

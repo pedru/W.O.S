@@ -79,6 +79,16 @@ public class LeaTestRestService implements LeaRestService {
     }
 
     @Override
+    public Call<Void> createNewQuestion(int exam_id, String question) {
+        return null;
+    }
+
+    @Override
+    public Call<Void> createNewAnswer(int question_id, String answer) {
+        return null;
+    }
+
+    @Override
     public Call<ExamSubscription> subscribeExam(@Field("exam_id") int exam_id) {
         ExamSubscription response = leaTestDatabase.rememberExam(exam_id);
         return new LeaTestCall<>(response);
