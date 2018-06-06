@@ -1,5 +1,6 @@
 package wos.lea;
 
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -11,6 +12,8 @@ import static android.app.PendingIntent.getActivity;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
+import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -55,9 +58,16 @@ public class CreateQuestionActivityTest {
     public void questionSaveClickTest() {
 
         //TODO write text
-        onView(allOf(withClassName(endsWith("EditText")))).perform(replaceText("Another test"));
-        onView(withId(R.id.save_question)).perform(click());
-        onView(withText(R.string.saveQuestionToast)).inRoot(withDecorView(not(is(testRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));
+        onView(withId(R.id.question_text)).perform(typeText("TESTTESTTEST"));
+
+       /* try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        onView(withId(R.id.save_question)).perform(scrollTo()).perform(click());
+        // onView(withText(R.string.saveQuestionToast)).inRoot(withDecorView(not(is(testRule.getActivity().getWindow().getDecorView())))).check(matches(isDisplayed()));*/
     }
 
 }

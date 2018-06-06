@@ -67,6 +67,11 @@ public class CreateQuestionActivity extends AppCompatActivity {
                 toast.show();
 
                 finish();
+     /*           Intent intent = new Intent(CreateQuestionActivity.this, ExamDetailActivity.class);
+
+                intent.putExtra("examId", examId);
+                intent.putExtra("fromQue" , true);
+                this.startActivity(intent);*/
             }
             return true;
         }

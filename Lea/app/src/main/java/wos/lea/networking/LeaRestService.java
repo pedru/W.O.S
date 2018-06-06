@@ -53,12 +53,12 @@ public interface LeaRestService {
                                 @Field("date") String date);
 
     @FormUrlEncoded
-    @POST("api/questions")
+    @POST("api/questions/")
     Call<Void> createNewQuestion(@Field("exam_id") int exam_id,
                                 @Field("question") String question);
 
     @FormUrlEncoded
-    @POST("api/answers")
+    @POST("api/answers/")
     Call<Void> createNewAnswer(@Field("question_id") int question_id,
-                                 @Field("answer") String answer);
+                                 @Field("text") String answer);
 }

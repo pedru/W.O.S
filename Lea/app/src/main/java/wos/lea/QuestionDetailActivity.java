@@ -107,6 +107,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 EditText answerText = (EditText) findViewById(R.id.answerText);
+                answerText.setFocusable(true);
                 answerText.setVisibility(View.VISIBLE);
                 InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
