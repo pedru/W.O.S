@@ -7,9 +7,9 @@ from rest_framework.response import Response
 import logging
 
 from backend.permissions import IsOwnerOrReadOnly
-from exams.models import Exam, Question, Lecture, Answer
+from exams.models import Exam, Question, Lecture, Answer, QuestionVoting
 from exams.serializers import ExamListSerializer, QuestionListSerializer, LectureDetailSerializer, LectureSerializer, \
-    ExamDetailSerializer, ExamCreateSerializer, AnswerListSerializer
+    ExamDetailSerializer, ExamCreateSerializer, AnswerListSerializer, QuestionDetailSerializer, QuestionCreateSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +47,10 @@ class QuestionViewSet(viewsets.ModelViewSet):
             return QuestionListSerializer
 
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user, question=self.request.data['question'], exam_id=self.request.data['exam_id'])
+
+
 class AnswerViewSet(viewsets.ModelViewSet):
     queryset = Answer.objects.all()
     serializer_class = AnswerListSerializer
@@ -56,7 +60,7 @@ class LectureViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Lecture.objects.all()
 
     def get_serializer_class(self):
-        if (self.action == 'retrieve'):
+        if self.action == 'retrieve':
             return LectureDetailSerializer
         else:
             return LectureSerializer
@@ -124,5 +128,3 @@ def upvote(request):
     except QuestionVoting.DoesNotExist:
         QuestionVoting(user=request.user, question=question, weight=1).save()
         return Response({'detail': 'Upvoted question "{}"'.format(question)}, 201)
-
-

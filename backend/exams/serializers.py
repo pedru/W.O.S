@@ -28,13 +28,12 @@ class QuestionDetailSerializer(QuestionListSerializer):
 class QuestionCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ['exam_id', 'question', 'user']
+        fields = ['exam_id', 'question']
 
     def create(self, validated_data):
-        user_id = validated_data['user_id']
         question = validated_data['question']
         exam = Exam.objects.get(pk=validated_data['exam_id'])
-        created_model = self.Meta.model.objects.create(exam=exam, question=question, user_id=user_id)
+        created_model = self.Meta.model.objects.create(exam=exam, question=question, user=validated_data['user'])
         created_model.save()
         return created_model
 
@@ -65,12 +64,11 @@ class ExamCreateSerializer(serializers.ModelSerializer):
     # owner = serializers.ReadOnlyField()
     class Meta:
         model = Exam
-        fields = ['lecture_id', 'date', 'owner_id']
+        fields = ['lecture_id', 'date', 'owner']
 
     def create(self, validated_data):
         lecture = Lecture.objects.get(pk=validated_data['lecture_id'])
-        owner_id = validated_data['owner'].id
-        created_model = self.Meta.model.objects.create(lecture=lecture, date=validated_data['date'], owner_id=owner_id)
+        created_model = self.Meta.model.objects.create(lecture=lecture, date=validated_data['date'], owner=validated_data['owner'])
         created_model.save()
         return created_model
 
