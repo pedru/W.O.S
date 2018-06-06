@@ -9,7 +9,7 @@ class LectureAdmin(admin.ModelAdmin):
 
 @admin.register(Exam)
 class ExamAdmin(admin.ModelAdmin):
-    list_display = ['id','date','lecture','question_count']
+    list_display = ['id', 'date', 'lecture', 'question_count']
     pass
 
 
@@ -20,5 +20,4 @@ class QuestionAdmin(admin.ModelAdmin):
 
 @admin.register(Answer)
 class AnswerAdmin(admin.ModelAdmin):
-    list_display = ['question', 'text', 'owner']
-    
+    list_display = ['question', 'text', 'user']

@@ -14,6 +14,11 @@ from studies.models import Study
 class UserTestCase(TransactionTestCase):
     fixtures = ['test_user']
 
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.get(pk=1)
+        self.client.force_authenticate()
+
 
 class ExamsConfigTest(SimpleTestCase):
     def test_apps(self):
@@ -67,7 +72,7 @@ class AnswerTestCase(SimpleTestCase):
 
 
 class CreateExamApiTest(TransactionTestCase):
-    create_url = 'api/exams/'
+    create_url = '/api/exams/'
 
     def setUp(self):
         self.client = APIClient()
@@ -167,29 +172,31 @@ class UnsubscribeFromExamTestCase(SubscriptionTestCase):
 
 
 class CreateQuestionApiTest(UserTestCase):
-    question_api_url = '/api/questions'
+    question_api_url = '/api/questions/'
     exam_id = 1
+    test_question = 'Test Question?'
 
     def setUp(self):
         # Create an exam to attach the question to
         mixer.blend(Exam, id=self.exam_id)
+        super().setUp()
 
     def test_create_question(self):
         # Create a new question via the API
-        test_question = 'Test Question?'
-        response = self.client.post(self.question_api_url, {'exam_id': self.exam_id, 'question': test_question})
+
+        response = self.client.post(self.question_api_url, {'exam_id': self.exam_id, 'question': self.test_question, 'user':self.request.user})
         self.assertEquals(response.status_code, 201)
 
         # Check if the question was created
         try:
-            created_question = Question.objects.get(question=test_question)
+            created_question = Question.objects.get(question=self.test_question)
             self.assertEquals(created_question.exam_id, self.exam_id)
         except Question.DoesNotExist:
             self.fail('Test question was not saved to database')
 
     def test_error_non_existent_exam(self):
         non_existing_id = 99999
-        response = self.client.post(self.question_api_url, {'exam_id': non_existing_id, 'question': test_question})
+        response = self.client.post(self.question_api_url, {'exam_id': non_existing_id, 'question': self.test_question})
         self.assertEquals(response.status_code, 404, "Non-existing exam should raise 404")
 
     def test_error_missing_parameter(self):
